@@ -1,15 +1,14 @@
-const providers = require('hyperledger-besu-ethers').providers
-const provider = new providers.BesuProvider("http://localhost:20000");
+const providers = require('hyperledger-besu-ethers').providers;
+const provider = new providers.BesuProvider('http://localhost:20000');
 
 async function example() {
+    const stats = await provider.getBesuStatistics();
+    console.log(stats);
+    // { maxSize: 4096, localCount: 0, remoteCount: 0 }
 
-  const stats = await provider.getBesuStatistics()
-  console.log(stats)
-  // { maxSize: 4096, localCount: 0, remoteCount: 0 }
-
-  const txs = await provider.getBesuTransactions()
-  console.log(txs)
-  /* [
+    const txs = await provider.getBesuTransactions();
+    console.log(txs);
+    /* [
     {
         "hash": "0x8a66830098be4006a3f63a03b6e9b67aa721e04bd6b46d420b8f1937689fb4f1",
         "isReceivedFromLocalSource": true,
@@ -23,4 +22,4 @@ async function example() {
   */
 }
 
-example()
+example();

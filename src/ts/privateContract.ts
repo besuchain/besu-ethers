@@ -1,28 +1,27 @@
-
-import { ParamType } from "@ethersproject/abi";
-import { Signer } from "@ethersproject/abstract-signer";
-import { Block, Log, Provider } from "@ethersproject/abstract-provider";
-import { getAddress } from "@ethersproject/address";
-import { arrayify, hexDataSlice, stripZeros } from "@ethersproject/bytes";
-import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
-import { BytesLike } from "@ethersproject/bytes";
-import { Zero } from "@ethersproject/constants";
+import { ParamType } from '@ethersproject/abi';
+import { Signer } from '@ethersproject/abstract-signer';
+import { Block, Log, Provider } from '@ethersproject/abstract-provider';
+import { getAddress } from '@ethersproject/address';
+import { arrayify, hexDataSlice, stripZeros } from '@ethersproject/bytes';
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
+import { BytesLike } from '@ethersproject/bytes';
+import { Zero } from '@ethersproject/constants';
 import { ContractFactory, ContractInterface } from '@ethersproject/contracts';
-import { keccak256 } from "@ethersproject/keccak256";
-import { defineReadOnly, deepCopy, resolveProperties, shallowCopy } from "@ethersproject/properties";
-import { encode } from "@ethersproject/rlp";
-import { Logger } from "@ethersproject/logger";
-import { version } from "./_version";
+import { keccak256 } from '@ethersproject/keccak256';
+import { defineReadOnly, deepCopy, resolveProperties, shallowCopy } from '@ethersproject/properties';
+import { encode } from '@ethersproject/rlp';
+import { Logger } from '@ethersproject/logger';
+import { version } from './_version';
 
 const logger = new Logger(version);
 
 // FIXME a workaround until this Ethers issue has been solved https://github.com/ethers-io/ethers.js/issues/577
-import { Contract } from "./contracts";
+import { Contract } from './contracts';
 
-import { PrivateProvider } from './privateProvider'
-import { allowedTransactionKeys, PrivateTransactionReceipt, PrivateTransactionResponse } from './privateTransaction'
-import { generatePrivacyGroup, PrivacyGroupOptions} from './privacyGroup'
-import { PrivateSigner } from './privateWallet'
+import { PrivateProvider } from './privateProvider';
+import { allowedTransactionKeys, PrivateTransactionReceipt, PrivateTransactionResponse } from './privateTransaction';
+import { generatePrivacyGroup, PrivacyGroupOptions } from './privacyGroup';
+import { PrivateSigner } from './privateWallet';
 
 type RunFunction = (...params: Array<any>) => Promise<any>;
 
@@ -34,7 +33,6 @@ type RunOptions = {
 };
 
 export interface PrivateEvent extends Log {
-
     // The event name
     event?: string;
 
@@ -61,37 +59,37 @@ export interface PrivateContractReceipt extends PrivateTransactionReceipt {
 }
 
 export class PrivateContract extends Contract {
-
     readonly signer: PrivateSigner;
     readonly provider: PrivateProvider;
     readonly privacyGroupId: string;
     readonly deployPrivateTransaction: PrivateTransactionResponse;
-    readonly privacyGroupOptions: PrivacyGroupOptions
+    readonly privacyGroupOptions: PrivacyGroupOptions;
 
     constructor(
         addressOrName: string,
         privacyGroupOptions: PrivacyGroupOptions,
         contractInterface: ContractInterface,
-        signerOrProvider: PrivateSigner | PrivateProvider)
-    {
+        signerOrProvider: PrivateSigner | PrivateProvider,
+    ) {
         super(addressOrName, contractInterface, signerOrProvider, runPrivateMethod);
 
         // Validate the privacyGroupOptions
-        generatePrivacyGroup(privacyGroupOptions)
-        defineReadOnly(this, "privacyGroupOptions", privacyGroupOptions);
+        generatePrivacyGroup(privacyGroupOptions);
+        defineReadOnly(this, 'privacyGroupOptions', privacyGroupOptions);
     }
 
     connect(signerOrProvider: PrivateSigner | PrivateProvider): PrivateContract {
-        let contract = new (<{ new(...args: any[]): PrivateContract }>(this.constructor))(
+        let contract = new (<{ new (...args: any[]): PrivateContract }>this.constructor)(
             this.address,
             this.privacyGroupOptions,
             this.interface,
-            signerOrProvider);
+            signerOrProvider,
+        );
 
-        defineReadOnly(contract, "privacyGroupOptions", this.privacyGroupOptions);
+        defineReadOnly(contract, 'privacyGroupOptions', this.privacyGroupOptions);
 
         if (this.deployPrivateTransaction) {
-            defineReadOnly(contract, "deployPrivateTransaction", this.deployPrivateTransaction);
+            defineReadOnly(contract, 'deployPrivateTransaction', this.deployPrivateTransaction);
         }
 
         return contract;
@@ -99,21 +97,22 @@ export class PrivateContract extends Contract {
 
     // Re-attach to a different on-chain instance of this contract
     attach(addressOrName: string): PrivateContract {
-        return new (<{ new(...args: any[]): PrivateContract }>(this.constructor))(
+        return new (<{ new (...args: any[]): PrivateContract }>this.constructor)(
             addressOrName,
             this.privacyGroupOptions,
             this.interface,
-            this.signer || this.provider);
+            this.signer || this.provider,
+        );
     }
 }
 
 function runPrivateMethod(contract: PrivateContract, functionName: string, options: RunOptions): RunFunction {
     let method = contract.interface.functions[functionName];
-    return function(...params): Promise<any> {
-        let tx: any = {}
+    return function (...params): Promise<any> {
+        let tx: any = {};
 
         // If 1 extra parameter was passed in, it contains overrides
-        if (params.length === method.inputs.length + 1 && typeof(params[params.length - 1]) === "object") {
+        if (params.length === method.inputs.length + 1 && typeof params[params.length - 1] === 'object') {
             tx = shallowCopy(params.pop());
 
             delete tx.blockTag;
@@ -121,17 +120,17 @@ function runPrivateMethod(contract: PrivateContract, functionName: string, optio
             // Check for unexpected keys (e.g. using "gas" instead of "gasLimit")
             for (let key in tx) {
                 if (!allowedTransactionKeys[key]) {
-                    logger.throwError(("unknown transaction override - " + key), "overrides", tx);
+                    logger.throwError('unknown transaction override - ' + key, 'overrides', tx);
                 }
             }
         }
 
-        logger.checkArgumentCount(params.length, method.inputs.length, "passed to contract");
+        logger.checkArgumentCount(params.length, method.inputs.length, 'passed to contract');
 
         // Check overrides make sense
-        ["data", "to", 'privateFrom', 'privateFor', 'restriction'].forEach(function(key) {
+        ['data', 'to', 'privateFrom', 'privateFor', 'restriction'].forEach(function (key) {
             if (tx[key] != null) {
-                logger.throwError("cannot override " + key, Logger.errors.UNSUPPORTED_OPERATION, { operation: key });
+                logger.throwError('cannot override ' + key, Logger.errors.UNSUPPORTED_OPERATION, { operation: key });
             }
         });
 
@@ -154,46 +153,54 @@ function runPrivateMethod(contract: PrivateContract, functionName: string, optio
             tx = {
                 ...tx,
                 ...contract.privacyGroupOptions,
-            }
+            };
 
             if (method.constant || options.callStatic) {
-
                 // Call (constant functions) always cost 0 ether
                 if (options.estimate) {
                     return Promise.resolve(Zero);
                 }
 
                 if (!contract.provider && !contract.signer) {
-                    logger.throwError("call (constant functions) require a provider or signer", Logger.errors.UNSUPPORTED_OPERATION, { operation: "call" })
+                    logger.throwError(
+                        'call (constant functions) require a provider or signer',
+                        Logger.errors.UNSUPPORTED_OPERATION,
+                        { operation: 'call' },
+                    );
                 }
 
                 // Check overrides make sense
-                ["gasLimit", "gasPrice", "value"].forEach(function(key) {
+                ['gasLimit', 'gasPrice', 'value'].forEach(function (key) {
                     if (tx[key] != null) {
-                        throw new Error("call cannot override " + key) ;
+                        throw new Error('call cannot override ' + key);
                     }
                 });
 
-                if (options.transaction) { return resolveProperties(tx); }
+                if (options.transaction) {
+                    return resolveProperties(tx);
+                }
 
                 // FIXME remove once Besu supports an equivalent of eth_call
                 if (!contract.signer) {
-                    logger.throwError("can only call a private transaction by sending a signed transaction", Logger.errors.UNSUPPORTED_OPERATION, {
-                        transaction: tx,
-                        operation: "call"
-                    });
+                    logger.throwError(
+                        'can only call a private transaction by sending a signed transaction',
+                        Logger.errors.UNSUPPORTED_OPERATION,
+                        {
+                            transaction: tx,
+                            operation: 'call',
+                        },
+                    );
                 }
 
                 //return (contract.signer || contract.provider).privateCall(tx).then((value: any) => {
                 return contract.signer.privateCall(tx).then((value: any) => {
-
                     if (value == undefined) {
                         logger.throwArgumentError('no value returned from private contract call', 'privateCallValue', {
                             value,
                             functionName,
                             contractAddress: contract.address,
                             params,
-                        })
+                        });
                     }
 
                     try {
@@ -202,7 +209,6 @@ function runPrivateMethod(contract: PrivateContract, functionName: string, optio
                             result = result[0];
                         }
                         return result;
-
                     } catch (error) {
                         if (error.code === Logger.errors.CALL_EXCEPTION) {
                             error.address = contract.address;
@@ -217,11 +223,17 @@ function runPrivateMethod(contract: PrivateContract, functionName: string, optio
             // Only computing the transaction estimate
             if (options.estimate) {
                 if (!contract.provider && !contract.signer) {
-                    logger.throwError("estimate require a provider or signer", Logger.errors.UNSUPPORTED_OPERATION, { operation: "estimateGas" })
+                    logger.throwError('estimate require a provider or signer', Logger.errors.UNSUPPORTED_OPERATION, {
+                        operation: 'estimateGas',
+                    });
                 }
 
                 // FIXME restore once Besu supports an equivalent of eth_estimateGas
-                logger.throwError("can not currently estimate a private transaction", Logger.errors.UNSUPPORTED_OPERATION, { operation: "estimateGas" })
+                logger.throwError(
+                    'can not currently estimate a private transaction',
+                    Logger.errors.UNSUPPORTED_OPERATION,
+                    { operation: 'estimateGas' },
+                );
                 //return (contract.signer || contract.provider).estimateGas(tx);
             }
 
@@ -230,17 +242,23 @@ function runPrivateMethod(contract: PrivateContract, functionName: string, optio
             }
 
             if (tx.value != null && !method.payable) {
-                logger.throwError("contract method is not payable", Logger.errors.INVALID_ARGUMENT, {
-                    argument: "sendPrivateTransaction",
+                logger.throwError('contract method is not payable', Logger.errors.INVALID_ARGUMENT, {
+                    argument: 'sendPrivateTransaction',
                     value: tx,
-                    method: method.format()
-                })
+                    method: method.format(),
+                });
             }
 
-            if (options.transaction) { return resolveProperties(tx); }
+            if (options.transaction) {
+                return resolveProperties(tx);
+            }
 
             if (!contract.signer) {
-                logger.throwError("sending a private transaction require a signer", Logger.errors.UNSUPPORTED_OPERATION, { operation: "sendPrivateTransaction" })
+                logger.throwError(
+                    'sending a private transaction require a signer',
+                    Logger.errors.UNSUPPORTED_OPERATION,
+                    { operation: 'sendPrivateTransaction' },
+                );
             }
 
             return contract.signer.sendPrivateTransaction(tx).then((tx: PrivateTransactionResponse) => {
@@ -249,7 +267,7 @@ function runPrivateMethod(contract: PrivateContract, functionName: string, optio
                 tx.wait = (confirmations?: number) => {
                     return wait(confirmations).then((receipt: PrivateContractReceipt) => {
                         receipt.events = receipt.logs.map((log) => {
-                            let event: PrivateEvent = (<PrivateEvent>deepCopy(log));
+                            let event: PrivateEvent = <PrivateEvent>deepCopy(log);
 
                             let parsed = contract.interface.parseLog(log);
                             if (parsed) {
@@ -261,13 +279,15 @@ function runPrivateMethod(contract: PrivateContract, functionName: string, optio
                                 event.eventSignature = parsed.signature;
                             }
 
-                            event.removeListener = () => { return contract.provider; }
+                            event.removeListener = () => {
+                                return contract.provider;
+                            };
                             event.getPrivateTransaction = () => {
                                 return contract.provider.getPrivateTransaction(tx.publicHash);
-                            }
+                            };
                             event.getPrivateTransactionReceipt = () => {
                                 return Promise.resolve(receipt);
-                            }
+                            };
 
                             return event;
                         });
@@ -279,32 +299,40 @@ function runPrivateMethod(contract: PrivateContract, functionName: string, optio
                 return tx;
             });
         });
-    }
+    };
 }
 
 // TODO Raise Ether.js issue to have this exported from @ethersproject/contracts
 // Recursively replaces ENS names with promises to resolve the name and resolves all properties
-function resolveAddresses(signerOrProvider: Signer | Provider, value: any, paramType: ParamType | Array<ParamType>): Promise<any> {
+function resolveAddresses(
+    signerOrProvider: Signer | Provider,
+    value: any,
+    paramType: ParamType | Array<ParamType>,
+): Promise<any> {
     if (Array.isArray(paramType)) {
-        return Promise.all(paramType.map((paramType, index) => {
-            return resolveAddresses(
-                signerOrProvider,
-                ((Array.isArray(value)) ? value[index]: value[paramType.name]),
-                paramType
-            );
-        }));
+        return Promise.all(
+            paramType.map((paramType, index) => {
+                return resolveAddresses(
+                    signerOrProvider,
+                    Array.isArray(value) ? value[index] : value[paramType.name],
+                    paramType,
+                );
+            }),
+        );
     }
 
-    if (paramType.type === "address") {
+    if (paramType.type === 'address') {
         return signerOrProvider.resolveName(value);
     }
 
-    if (paramType.type === "tuple") {
+    if (paramType.type === 'tuple') {
         return resolveAddresses(signerOrProvider, value, paramType.components);
     }
 
-    if (paramType.baseType === "array") {
-        if (!Array.isArray(value)) { throw new Error("invalid value for array"); }
+    if (paramType.baseType === 'array') {
+        if (!Array.isArray(value)) {
+            throw new Error('invalid value for array');
+        }
         return Promise.all(value.map((v) => resolveAddresses(signerOrProvider, v, paramType.arrayChildren)));
     }
 
@@ -312,36 +340,37 @@ function resolveAddresses(signerOrProvider: Signer | Provider, value: any, param
 }
 
 export class PrivateContractFactory extends ContractFactory {
-
     readonly signer: PrivateSigner;
 
-    constructor(contractInterface: ContractInterface, bytecode: BytesLike | { object: string }, signer?: PrivateSigner) {
-
+    constructor(
+        contractInterface: ContractInterface,
+        bytecode: BytesLike | { object: string },
+        signer?: PrivateSigner,
+    ) {
         super(contractInterface, bytecode, signer);
     }
 
     privateDeploy(privacyGroupOptions: PrivacyGroupOptions, ...args: Array<any>): Promise<PrivateContract> {
         return resolveAddresses(this.signer, args, this.interface.deploy.inputs).then((args) => {
-
             // Get the deployment transaction (with optional overrides)
             const tx = this.getDeployTransaction(...args);
 
             const privateTx = {
                 ...tx,
                 ...privacyGroupOptions,
-            }
+            };
 
             // Send the deployment transaction
-            return this.signer.sendPrivateTransaction(privateTx).then(deployedTx => {
-
-                const address = (<any>(this.constructor)).getPrivateContractAddress(deployedTx);
-                const contract = (<any>(this.constructor)).getPrivateContract(
+            return this.signer.sendPrivateTransaction(privateTx).then((deployedTx) => {
+                const address = (<any>this.constructor).getPrivateContractAddress(deployedTx);
+                const contract = (<any>this.constructor).getPrivateContract(
                     address,
                     privacyGroupOptions,
                     this.interface,
-                    this.signer);
+                    this.signer,
+                );
 
-                defineReadOnly(contract, "deployPrivateTransaction", deployedTx);
+                defineReadOnly(contract, 'deployPrivateTransaction', deployedTx);
 
                 return contract;
             });
@@ -357,23 +386,27 @@ export class PrivateContractFactory extends ContractFactory {
         return new PrivateContract(address, privacyGroupOptions, contractInterface, signer);
     }
 
-    static getPrivateContractAddress(
-        transaction: { from: string, nonce: BigNumberish, privateFor: string, privateFrom?: string, restriction: 'restricted' | 'unrestricted' },
-    ): string {
+    static getPrivateContractAddress(transaction: {
+        from: string;
+        nonce: BigNumberish;
+        privateFor: string;
+        privateFrom?: string;
+        restriction: 'restricted' | 'unrestricted';
+    }): string {
         let from: string = null;
         try {
             from = getAddress(transaction.from);
         } catch (error) {
-            logger.throwArgumentError("missing from address", "transaction", transaction);
+            logger.throwArgumentError('missing from address', 'transaction', transaction);
         }
 
         let nonce = stripZeros(arrayify(transaction.nonce));
 
         // convert from object with privateFrom and privateFor properties to base64 from
-        const privacyGroupId = generatePrivacyGroup(transaction)
+        const privacyGroupId = generatePrivacyGroup(transaction);
         // convert from base64 to hex
         const privacyGroupIdHex = Buffer.from(privacyGroupId, 'base64');
 
-        return getAddress(hexDataSlice(keccak256(encode([ from, nonce, privacyGroupIdHex ])), 12));
+        return getAddress(hexDataSlice(keccak256(encode([from, nonce, privacyGroupIdHex])), 12));
     }
 }

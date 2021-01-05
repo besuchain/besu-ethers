@@ -1,19 +1,27 @@
-"use strict";
+'use strict';
 
-import { EventFragment, Fragment, Indexed, Interface, JsonFragment, ParamType } from "@ethersproject/abi";
-import { Block, BlockTag, Listener, Log, Provider, TransactionReceipt, TransactionRequest, TransactionResponse } from "@ethersproject/abstract-provider";
-import { Signer, VoidSigner } from "@ethersproject/abstract-signer";
-import { getContractAddress } from "@ethersproject/address";
-import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
-import { BytesLike, isHexString } from "@ethersproject/bytes";
-import { Zero } from "@ethersproject/constants";
-import { defineReadOnly, deepCopy, getStatic, resolveProperties, shallowCopy } from "@ethersproject/properties";
-import { UnsignedTransaction } from "@ethersproject/transactions";
-import { Logger } from "@ethersproject/logger";
-import { version } from "./_version";
+import { EventFragment, Fragment, Indexed, Interface, JsonFragment, ParamType } from '@ethersproject/abi';
+import {
+    Block,
+    BlockTag,
+    Listener,
+    Log,
+    Provider,
+    TransactionReceipt,
+    TransactionRequest,
+    TransactionResponse,
+} from '@ethersproject/abstract-provider';
+import { Signer, VoidSigner } from '@ethersproject/abstract-signer';
+import { getContractAddress } from '@ethersproject/address';
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
+import { BytesLike, isHexString } from '@ethersproject/bytes';
+import { Zero } from '@ethersproject/constants';
+import { defineReadOnly, deepCopy, getStatic, resolveProperties, shallowCopy } from '@ethersproject/properties';
+import { UnsignedTransaction } from '@ethersproject/transactions';
+import { Logger } from '@ethersproject/logger';
+import { version } from './_version';
 
 const logger = new Logger(version);
-
 
 export interface Overrides {
     gasLimit?: BigNumberish | Promise<BigNumberish>;
@@ -27,7 +35,7 @@ export interface PayableOverrides extends Overrides {
 
 export interface CallOverrides extends PayableOverrides {
     blockTag?: BlockTag | Promise<BlockTag>;
-    from?: string | Promise<string>
+    from?: string | Promise<string>;
 }
 
 export type ContractFunction = (...params: Array<any>) => Promise<any>;
@@ -41,7 +49,6 @@ export type EventFilter = {
 
 // The (n + 1)th parameter passed to contract event callbacks
 export interface Event extends Log {
-
     // The event name
     event?: string;
 
@@ -73,32 +80,47 @@ export interface ContractTransaction extends TransactionResponse {
 
 ///////////////////////////////
 
-const allowedTransactionKeys: { [ key: string ]: boolean } = {
-    chainId: true, data: true, from: true, gasLimit: true, gasPrice:true, nonce: true, to: true, value: true
-}
+const allowedTransactionKeys: { [key: string]: boolean } = {
+    chainId: true,
+    data: true,
+    from: true,
+    gasLimit: true,
+    gasPrice: true,
+    nonce: true,
+    to: true,
+    value: true,
+};
 
 // Recursively replaces ENS names with promises to resolve the name and resolves all properties
-function resolveAddresses(signerOrProvider: Signer | Provider, value: any, paramType: ParamType | Array<ParamType>): Promise<any> {
+function resolveAddresses(
+    signerOrProvider: Signer | Provider,
+    value: any,
+    paramType: ParamType | Array<ParamType>,
+): Promise<any> {
     if (Array.isArray(paramType)) {
-        return Promise.all(paramType.map((paramType, index) => {
-            return resolveAddresses(
-                signerOrProvider,
-                ((Array.isArray(value)) ? value[index]: value[paramType.name]),
-                paramType
-            );
-        }));
+        return Promise.all(
+            paramType.map((paramType, index) => {
+                return resolveAddresses(
+                    signerOrProvider,
+                    Array.isArray(value) ? value[index] : value[paramType.name],
+                    paramType,
+                );
+            }),
+        );
     }
 
-    if (paramType.type === "address") {
+    if (paramType.type === 'address') {
         return signerOrProvider.resolveName(value);
     }
 
-    if (paramType.type === "tuple") {
+    if (paramType.type === 'tuple') {
         return resolveAddresses(signerOrProvider, value, paramType.components);
     }
 
-    if (paramType.baseType === "array") {
-        if (!Array.isArray(value)) { throw new Error("invalid value for array"); }
+    if (paramType.baseType === 'array') {
+        if (!Array.isArray(value)) {
+            throw new Error('invalid value for array');
+        }
         return Promise.all(value.map((v) => resolveAddresses(signerOrProvider, v, paramType.arrayChildren)));
     }
 
@@ -116,13 +138,13 @@ type RunOptions = {
 
 function runMethod(contract: Contract, functionName: string, options: RunOptions): RunFunction {
     let method = contract.interface.functions[functionName];
-    return function(...params): Promise<any> {
-        let tx: any = {}
+    return function (...params): Promise<any> {
+        let tx: any = {};
 
         let blockTag: BlockTag = null;
 
         // If 1 extra parameter was passed in, it contains overrides
-        if (params.length === method.inputs.length + 1 && typeof(params[params.length - 1]) === "object") {
+        if (params.length === method.inputs.length + 1 && typeof params[params.length - 1] === 'object') {
             tx = shallowCopy(params.pop());
 
             if (tx.blockTag != null) {
@@ -134,17 +156,17 @@ function runMethod(contract: Contract, functionName: string, options: RunOptions
             // Check for unexpected keys (e.g. using "gas" instead of "gasLimit")
             for (let key in tx) {
                 if (!allowedTransactionKeys[key]) {
-                    logger.throwError(("unknown transaction override - " + key), "overrides", tx);
+                    logger.throwError('unknown transaction override - ' + key, 'overrides', tx);
                 }
             }
         }
 
-        logger.checkArgumentCount(params.length, method.inputs.length, "passed to contract");
+        logger.checkArgumentCount(params.length, method.inputs.length, 'passed to contract');
 
         // Check overrides make sense
-        ["data", "to"].forEach(function(key) {
+        ['data', 'to'].forEach(function (key) {
             if (tx[key] != null) {
-                logger.throwError("cannot override " + key, Logger.errors.UNSUPPORTED_OPERATION, { operation: key });
+                logger.throwError('cannot override ' + key, Logger.errors.UNSUPPORTED_OPERATION, { operation: key });
             }
         });
 
@@ -160,34 +182,37 @@ function runMethod(contract: Contract, functionName: string, options: RunOptions
         return resolveAddresses(contract.signer || contract.provider, params, method.inputs).then((params) => {
             tx.data = contract.interface.encodeFunctionData(method, params);
             if (method.constant || options.callStatic) {
-
                 // Call (constant functions) always cost 0 ether
                 if (options.estimate) {
                     return Promise.resolve(Zero);
                 }
 
                 if (!contract.provider && !contract.signer) {
-                    logger.throwError("call (constant functions) require a provider or signer", Logger.errors.UNSUPPORTED_OPERATION, { operation: "call" })
+                    logger.throwError(
+                        'call (constant functions) require a provider or signer',
+                        Logger.errors.UNSUPPORTED_OPERATION,
+                        { operation: 'call' },
+                    );
                 }
 
                 // Check overrides make sense
-                ["gasLimit", "gasPrice", "value"].forEach(function(key) {
+                ['gasLimit', 'gasPrice', 'value'].forEach(function (key) {
                     if (tx[key] != null) {
-                        throw new Error("call cannot override " + key) ;
+                        throw new Error('call cannot override ' + key);
                     }
                 });
 
-                if (options.transaction) { return resolveProperties(tx); }
+                if (options.transaction) {
+                    return resolveProperties(tx);
+                }
 
                 return (contract.signer || contract.provider).call(tx, blockTag).then((value) => {
-
                     try {
                         let result = contract.interface.decodeFunctionResult(method, value);
                         if (method.outputs.length === 1) {
                             result = result[0];
                         }
                         return result;
-
                     } catch (error) {
                         if (error.code === Logger.errors.CALL_EXCEPTION) {
                             error.address = contract.address;
@@ -197,13 +222,14 @@ function runMethod(contract: Contract, functionName: string, options: RunOptions
                         throw error;
                     }
                 });
-
             }
 
             // Only computing the transaction estimate
             if (options.estimate) {
                 if (!contract.provider && !contract.signer) {
-                    logger.throwError("estimate require a provider or signer", Logger.errors.UNSUPPORTED_OPERATION, { operation: "estimateGas" })
+                    logger.throwError('estimate require a provider or signer', Logger.errors.UNSUPPORTED_OPERATION, {
+                        operation: 'estimateGas',
+                    });
                 }
 
                 return (contract.signer || contract.provider).estimateGas(tx);
@@ -214,17 +240,21 @@ function runMethod(contract: Contract, functionName: string, options: RunOptions
             }
 
             if (tx.value != null && !method.payable) {
-                logger.throwError("contract method is not payable", Logger.errors.INVALID_ARGUMENT, {
-                    argument: "sendTransaction",
+                logger.throwError('contract method is not payable', Logger.errors.INVALID_ARGUMENT, {
+                    argument: 'sendTransaction',
                     value: tx,
-                    method: method.format()
-                })
+                    method: method.format(),
+                });
             }
 
-            if (options.transaction) { return resolveProperties(tx); }
+            if (options.transaction) {
+                return resolveProperties(tx);
+            }
 
             if (!contract.signer) {
-                logger.throwError("sending a transaction require a signer", Logger.errors.UNSUPPORTED_OPERATION, { operation: "sendTransaction" })
+                logger.throwError('sending a transaction require a signer', Logger.errors.UNSUPPORTED_OPERATION, {
+                    operation: 'sendTransaction',
+                });
             }
 
             return contract.signer.sendTransaction(tx).then((tx) => {
@@ -233,7 +263,7 @@ function runMethod(contract: Contract, functionName: string, options: RunOptions
                 tx.wait = (confirmations?: number) => {
                     return wait(confirmations).then((receipt: ContractReceipt) => {
                         receipt.events = receipt.logs.map((log) => {
-                            let event: Event = (<Event>deepCopy(log));
+                            let event: Event = <Event>deepCopy(log);
 
                             let parsed = contract.interface.parseLog(log);
                             if (parsed) {
@@ -245,16 +275,18 @@ function runMethod(contract: Contract, functionName: string, options: RunOptions
                                 event.eventSignature = parsed.signature;
                             }
 
-                            event.removeListener = () => { return contract.provider; }
+                            event.removeListener = () => {
+                                return contract.provider;
+                            };
                             event.getBlock = () => {
                                 return contract.provider.getBlock(receipt.blockHash);
-                            }
+                            };
                             event.getTransaction = () => {
                                 return contract.provider.getTransaction(receipt.transactionHash);
-                            }
+                            };
                             event.getTransactionReceipt = () => {
                                 return Promise.resolve(receipt);
-                            }
+                            };
 
                             return event;
                         });
@@ -266,14 +298,14 @@ function runMethod(contract: Contract, functionName: string, options: RunOptions
                 return tx;
             });
         });
-    }
+    };
 }
 
 function getEventTag(filter: EventFilter): string {
     if (filter.address && (filter.topics == null || filter.topics.length === 0)) {
-        return "*";
+        return '*';
     }
-    return (filter.address || "*") + "@" + (filter.topics ? filter.topics.join(":"): "");
+    return (filter.address || '*') + '@' + (filter.topics ? filter.topics.join(':') : '');
 }
 
 interface Bucket<T> {
@@ -283,12 +315,12 @@ interface Bucket<T> {
 class RunningEvent {
     readonly tag: string;
     readonly filter: EventFilter;
-    private _listeners: Array<{ listener: Listener, once: boolean }>;
+    private _listeners: Array<{ listener: Listener; once: boolean }>;
 
     constructor(tag: string, filter: EventFilter) {
-        defineReadOnly(this, "tag", tag);
-        defineReadOnly(this, "filter", filter);
-        this._listeners = [ ];
+        defineReadOnly(this, 'tag', tag);
+        defineReadOnly(this, 'filter', filter);
+        this._listeners = [];
     }
 
     addListener(listener: Listener, once: boolean): void {
@@ -298,7 +330,9 @@ class RunningEvent {
     removeListener(listener: Listener): void {
         let done = false;
         this._listeners = this._listeners.filter((item) => {
-            if (done || item.listener !== listener) { return true; }
+            if (done || item.listener !== listener) {
+                return true;
+            }
             done = true;
             return false;
         });
@@ -319,7 +353,6 @@ class RunningEvent {
     run(args: Array<any>): number {
         let listenerCount = this.listenerCount();
         this._listeners = this._listeners.filter((item) => {
-
             let argsCopy = args.slice();
 
             // Call the callback in the next event loop
@@ -328,19 +361,18 @@ class RunningEvent {
             }, 0);
 
             // Reschedule it if it not "once"
-            return !(item.once);
+            return !item.once;
         });
 
         return listenerCount;
     }
 
-    prepareEvent(event: Event): void {
-    }
+    prepareEvent(event: Event): void {}
 }
 
 class ErrorRunningEvent extends RunningEvent {
     constructor() {
-        super("error", null);
+        super('error', null);
     }
 }
 
@@ -351,23 +383,24 @@ class FragmentRunningEvent extends RunningEvent {
 
     constructor(address: string, contractInterface: Interface, fragment: EventFragment, topics?: Array<string>) {
         let filter: EventFilter = {
-            address: address
-        }
+            address: address,
+        };
 
         let topic = contractInterface.getEventTopic(fragment);
         if (topics) {
-            if (topic !== topics[0]) { logger.throwArgumentError("topic mismatch", "topics", topics); }
+            if (topic !== topics[0]) {
+                logger.throwArgumentError('topic mismatch', 'topics', topics);
+            }
             filter.topics = topics.slice();
         } else {
-            filter.topics = [ topic ];
+            filter.topics = [topic];
         }
 
         super(getEventTag(filter), filter);
-        defineReadOnly(this, "address", address);
-        defineReadOnly(this, "interface", contractInterface);
-        defineReadOnly(this, "fragment", fragment);
+        defineReadOnly(this, 'address', address);
+        defineReadOnly(this, 'interface', contractInterface);
+        defineReadOnly(this, 'fragment', fragment);
     }
-
 
     prepareEvent(event: Event): void {
         super.prepareEvent(event);
@@ -387,10 +420,10 @@ class WildcardRunningEvent extends RunningEvent {
     readonly address: string;
     readonly interface: Interface;
 
-    constructor(address :string, contractInterface: Interface) {
-        super("*", { address: address });
-        defineReadOnly(this, "address", address);
-        defineReadOnly(this, "interface", contractInterface);
+    constructor(address: string, contractInterface: Interface) {
+        super('*', { address: address });
+        defineReadOnly(this, 'address', address);
+        defineReadOnly(this, 'interface', contractInterface);
     }
 
     prepareEvent(event: Event): void {
@@ -431,7 +464,7 @@ export class Contract {
 
     readonly filters: Bucket<(...params: Array<any>) => EventFilter>;
 
-    readonly [ name: string ]: ContractFunction | any;
+    readonly [name: string]: ContractFunction | any;
 
     readonly addressPromise: Promise<string>;
 
@@ -441,74 +474,94 @@ export class Contract {
     private _deployedPromise: Promise<Contract>;
 
     // A list of RunningEvents to track listsners for each event tag
-    private _runningEvents: { [ eventTag: string ]: RunningEvent };
+    private _runningEvents: { [eventTag: string]: RunningEvent };
 
     // Wrapped functions to call emit and allow deregistration from the provider
-    private _wrappedEmits: { [ eventTag: string ]: (...args: Array<any>) => void };
+    private _wrappedEmits: { [eventTag: string]: (...args: Array<any>) => void };
 
     constructor(
         addressOrName: string,
         contractInterface: ContractInterface,
         signerOrProvider: Signer | Provider,
         // Added optional runMethodOverride function that defaults to the original runMethod function
-        runMethodOverride: (contract: Contract, functionName: string, options: RunOptions) => RunFunction = runMethod)
-    {
+        runMethodOverride: (contract: Contract, functionName: string, options: RunOptions) => RunFunction = runMethod,
+    ) {
         logger.checkNew(new.target, Contract);
 
         // @TODO: Maybe still check the addressOrName looks like a valid address or name?
         //address = getAddress(address);
-        defineReadOnly(this, "interface", getStatic<InterfaceFunc>(new.target, "getInterface")(contractInterface));
+        defineReadOnly(this, 'interface', getStatic<InterfaceFunc>(new.target, 'getInterface')(contractInterface));
 
         if (Signer.isSigner(signerOrProvider)) {
-            defineReadOnly(this, "provider", signerOrProvider.provider || null);
-            defineReadOnly(this, "signer", signerOrProvider);
+            defineReadOnly(this, 'provider', signerOrProvider.provider || null);
+            defineReadOnly(this, 'signer', signerOrProvider);
         } else if (Provider.isProvider(signerOrProvider)) {
-            defineReadOnly(this, "provider", signerOrProvider);
-            defineReadOnly(this, "signer", null);
+            defineReadOnly(this, 'provider', signerOrProvider);
+            defineReadOnly(this, 'signer', null);
         } else {
-            logger.throwError("invalid signer or provider", Logger.errors.INVALID_ARGUMENT, { arg: "signerOrProvider", value: signerOrProvider });
+            logger.throwError('invalid signer or provider', Logger.errors.INVALID_ARGUMENT, {
+                arg: 'signerOrProvider',
+                value: signerOrProvider,
+            });
         }
 
-        defineReadOnly(this, "callStatic", { });
-        defineReadOnly(this, "estimate", { });
-        defineReadOnly(this, "functions", { });
-        defineReadOnly(this, "populateTransaction", { });
+        defineReadOnly(this, 'callStatic', {});
+        defineReadOnly(this, 'estimate', {});
+        defineReadOnly(this, 'functions', {});
+        defineReadOnly(this, 'populateTransaction', {});
 
-        defineReadOnly(this, "filters", { });
+        defineReadOnly(this, 'filters', {});
 
         Object.keys(this.interface.events).forEach((eventName) => {
             let event = this.interface.events[eventName];
             defineReadOnly(this.filters, eventName, (...args: Array<any>) => {
                 return {
                     address: this.address,
-                    topics: this.interface.encodeFilterTopics(event, args)
-                }
+                    topics: this.interface.encodeFilterTopics(event, args),
+                };
             });
         });
 
-        defineReadOnly(this, "_runningEvents", { });
-        defineReadOnly(this, "_wrappedEmits", { });
+        defineReadOnly(this, '_runningEvents', {});
+        defineReadOnly(this, '_wrappedEmits', {});
 
-        defineReadOnly(this, "address", addressOrName);
+        defineReadOnly(this, 'address', addressOrName);
         if (this.provider) {
-            defineReadOnly(this, "addressPromise", this.provider.resolveName(addressOrName).then((address) => {
-                if (address == null) { throw new Error("name not found"); }
-                return address;
-            }).catch((error: Error) => {
-                console.log("ERROR: Cannot find Contract - " + addressOrName);
-                throw error;
-            }));
+            defineReadOnly(
+                this,
+                'addressPromise',
+                this.provider
+                    .resolveName(addressOrName)
+                    .then((address) => {
+                        if (address == null) {
+                            throw new Error('name not found');
+                        }
+                        return address;
+                    })
+                    .catch((error: Error) => {
+                        console.log('ERROR: Cannot find Contract - ' + addressOrName);
+                        throw error;
+                    }),
+            );
         } else {
             try {
-                defineReadOnly(this, "addressPromise", Promise.resolve((<any>(this.interface.constructor)).getAddress(addressOrName)));
+                defineReadOnly(
+                    this,
+                    'addressPromise',
+                    Promise.resolve((<any>this.interface.constructor).getAddress(addressOrName)),
+                );
             } catch (error) {
                 // Without a provider, we cannot use ENS names
-                logger.throwError("provider is required to use non-address contract address", Logger.errors.INVALID_ARGUMENT, { argument: "addressOrName", value: addressOrName });
+                logger.throwError(
+                    'provider is required to use non-address contract address',
+                    Logger.errors.INVALID_ARGUMENT,
+                    { argument: 'addressOrName', value: addressOrName },
+                );
             }
         }
 
         Object.keys(this.interface.functions).forEach((name) => {
-            let run = runMethodOverride(this, name, { });
+            let run = runMethodOverride(this, name, {});
 
             if (this[name] == null) {
                 defineReadOnly(this, name, run);
@@ -532,7 +585,7 @@ export class Contract {
         });
     }
 
-    static getContractAddress(transaction: { from: string, nonce: BigNumberish }): string {
+    static getContractAddress(transaction: { from: string; nonce: BigNumberish }): string {
         return getContractAddress(transaction);
     }
 
@@ -550,23 +603,21 @@ export class Contract {
 
     _deployed(blockTag?: BlockTag): Promise<Contract> {
         if (!this._deployedPromise) {
-
             // If we were just deployed, we know the transaction we should occur in
             if (this.deployTransaction) {
                 this._deployedPromise = this.deployTransaction.wait().then(() => {
                     return this;
                 });
-
             } else {
                 // @TODO: Once we allow a timeout to be passed in, we will wait
                 // up to that many blocks for getCode
 
                 // Otherwise, poll for our code to be deployed
                 this._deployedPromise = this.provider.getCode(this.address, blockTag).then((code) => {
-                    if (code === "0x") {
-                        logger.throwError("contract not deployed", Logger.errors.UNSUPPORTED_OPERATION, {
+                    if (code === '0x') {
+                        logger.throwError('contract not deployed', Logger.errors.UNSUPPORTED_OPERATION, {
                             contractAddress: this.address,
-                            operation: "getDeployed"
+                            operation: 'getDeployed',
                         });
                     }
                     return this;
@@ -585,14 +636,18 @@ export class Contract {
 
     fallback(overrides?: TransactionRequest): Promise<TransactionResponse> {
         if (!this.signer) {
-            logger.throwError("sending a transaction require a signer", Logger.errors.UNSUPPORTED_OPERATION, { operation: "sendTransaction(fallback)" })
+            logger.throwError('sending a transaction require a signer', Logger.errors.UNSUPPORTED_OPERATION, {
+                operation: 'sendTransaction(fallback)',
+            });
         }
 
         let tx: TransactionRequest = shallowCopy(overrides || {});
 
-        ["from", "to"].forEach(function(key) {
-            if ((<any>tx)[key] == null) { return; }
-            logger.throwError("cannot override " + key, Logger.errors.UNSUPPORTED_OPERATION, { operation: key })
+        ['from', 'to'].forEach(function (key) {
+            if ((<any>tx)[key] == null) {
+                return;
+            }
+            logger.throwError('cannot override ' + key, Logger.errors.UNSUPPORTED_OPERATION, { operation: key });
         });
 
         tx.to = this.addressPromise;
@@ -603,20 +658,28 @@ export class Contract {
 
     // Reconnect to a different signer or provider
     connect(signerOrProvider: Signer | Provider | string): Contract {
-        if (typeof(signerOrProvider) === "string") {
+        if (typeof signerOrProvider === 'string') {
             signerOrProvider = new VoidSigner(signerOrProvider, this.provider);
         }
 
-        let contract = new (<{ new(...args: any[]): Contract }>(this.constructor))(this.address, this.interface, signerOrProvider);
+        let contract = new (<{ new (...args: any[]): Contract }>this.constructor)(
+            this.address,
+            this.interface,
+            signerOrProvider,
+        );
         if (this.deployTransaction) {
-            defineReadOnly(contract, "deployTransaction", this.deployTransaction);
+            defineReadOnly(contract, 'deployTransaction', this.deployTransaction);
         }
         return contract;
     }
 
     // Re-attach to a different on-chain instance of this contract
     attach(addressOrName: string): Contract {
-        return new (<{ new(...args: any[]): Contract }>(this.constructor))(addressOrName, this.interface, this.signer || this.provider);
+        return new (<{ new (...args: any[]): Contract }>this.constructor)(
+            addressOrName,
+            this.interface,
+            this.signer || this.provider,
+        );
     }
 
     static isIndexed(value: any): value is Indexed {
@@ -628,35 +691,36 @@ export class Contract {
         if (this._runningEvents[runningEvent.tag]) {
             return this._runningEvents[runningEvent.tag];
         }
-        return runningEvent
+        return runningEvent;
     }
 
     private _getRunningEvent(eventName: EventFilter | string): RunningEvent {
-        if (typeof(eventName) === "string") {
-
-
+        if (typeof eventName === 'string') {
             // Listen for "error" events (if your contract has an error event, include
             // the full signature to bypass this special event keyword)
-            if (eventName === "error") {
+            if (eventName === 'error') {
                 return this._normalizeRunningEvent(new ErrorRunningEvent());
             }
 
             // Listen for any event
-            if (eventName === "*") {
+            if (eventName === '*') {
                 return this._normalizeRunningEvent(new WildcardRunningEvent(this.address, this.interface));
             }
 
-            let fragment = this.interface.getEvent(eventName)
+            let fragment = this.interface.getEvent(eventName);
             if (!fragment) {
-                logger.throwError("unknown event - " + eventName, Logger.errors.INVALID_ARGUMENT, { argumnet: "eventName", value: eventName });
+                logger.throwError('unknown event - ' + eventName, Logger.errors.INVALID_ARGUMENT, {
+                    argumnet: 'eventName',
+                    value: eventName,
+                });
             }
 
             return this._normalizeRunningEvent(new FragmentRunningEvent(this.address, this.interface, fragment));
         }
 
         let filter: EventFilter = {
-            address: this.address
-        }
+            address: this.address,
+        };
 
         // Find the matching event in the ABI; if none, we still allow filtering
         // since it may be a filter for an otherwise unknown event
@@ -664,7 +728,9 @@ export class Contract {
             if (eventName.topics[0]) {
                 let fragment = this.interface.getEvent(eventName.topics[0]);
                 if (fragment) {
-                    return this._normalizeRunningEvent(new FragmentRunningEvent(this.address, this.interface, fragment, eventName.topics));
+                    return this._normalizeRunningEvent(
+                        new FragmentRunningEvent(this.address, this.interface, fragment, eventName.topics),
+                    );
                 }
             }
 
@@ -693,26 +759,38 @@ export class Contract {
         try {
             runningEvent.prepareEvent(event);
         } catch (error) {
-            this.emit("error", error);
+            this.emit('error', error);
             throw error;
         }
 
         event.removeListener = () => {
-            if (!listener) { return; }
+            if (!listener) {
+                return;
+            }
             runningEvent.removeListener(listener);
             this._checkRunningEvents(runningEvent);
         };
 
-        event.getBlock = () => { return this.provider.getBlock(log.blockHash); }
-        event.getTransaction = () => { return this.provider.getTransaction(log.transactionHash); }
-        event.getTransactionReceipt = () => { return this.provider.getTransactionReceipt(log.transactionHash); }
+        event.getBlock = () => {
+            return this.provider.getBlock(log.blockHash);
+        };
+        event.getTransaction = () => {
+            return this.provider.getTransaction(log.transactionHash);
+        };
+        event.getTransactionReceipt = () => {
+            return this.provider.getTransactionReceipt(log.transactionHash);
+        };
 
         return event;
     }
 
     private _addEventListener(runningEvent: RunningEvent, listener: Listener, once: boolean): void {
         if (!this.provider) {
-            logger.throwError("events require a provider or a signer with a provider", Logger.errors.UNSUPPORTED_OPERATION, { operation: "once" })
+            logger.throwError(
+                'events require a provider or a signer with a provider',
+                Logger.errors.UNSUPPORTED_OPERATION,
+                { operation: 'once' },
+            );
         }
 
         runningEvent.addListener(listener, once);
@@ -724,7 +802,7 @@ export class Contract {
         if (!this._wrappedEmits[runningEvent.tag]) {
             let wrappedEmit = (log: Log) => {
                 let event = this._wrapEvent(runningEvent, log, listener);
-                let values = (event.values || []);
+                let values = event.values || [];
                 values.push(event);
                 this.emit(runningEvent.filter, ...values);
             };
@@ -737,18 +815,22 @@ export class Contract {
         }
     }
 
-    queryFilter(event: EventFilter, fromBlockOrBlockhash?: BlockTag | string, toBlock?: BlockTag): Promise<Array<Event>> {
+    queryFilter(
+        event: EventFilter,
+        fromBlockOrBlockhash?: BlockTag | string,
+        toBlock?: BlockTag,
+    ): Promise<Array<Event>> {
         let runningEvent = this._getRunningEvent(event);
         let filter = shallowCopy(runningEvent.filter);
 
-        if (typeof(fromBlockOrBlockhash) === "string" && isHexString(fromBlockOrBlockhash, 32)) {
+        if (typeof fromBlockOrBlockhash === 'string' && isHexString(fromBlockOrBlockhash, 32)) {
             if (toBlock != null) {
-                logger.throwArgumentError("cannot specify toBlock with blockhash", "toBlock", toBlock);
+                logger.throwArgumentError('cannot specify toBlock with blockhash', 'toBlock', toBlock);
             }
             filter.blockhash = fromBlockOrBlockhash;
         } else {
-            filter.fromBlock = ((fromBlockOrBlockhash != null) ? fromBlockOrBlockhash: 0);
-            filter.toBlock = ((toBlock != null) ? toBlock: "latest");
+            filter.fromBlock = fromBlockOrBlockhash != null ? fromBlockOrBlockhash : 0;
+            filter.toBlock = toBlock != null ? toBlock : 'latest';
         }
 
         return this.provider.getLogs(filter).then((logs) => {
@@ -767,10 +849,12 @@ export class Contract {
     }
 
     emit(eventName: EventFilter | string, ...args: Array<any>): boolean {
-        if (!this.provider) { return false; }
+        if (!this.provider) {
+            return false;
+        }
 
         let runningEvent = this._getRunningEvent(eventName);
-        let result = (runningEvent.run(args) > 0);
+        let result = runningEvent.run(args) > 0;
 
         // May have drained all the "once" events; check for living events
         this._checkRunningEvents(runningEvent);
@@ -779,18 +863,22 @@ export class Contract {
     }
 
     listenerCount(eventName?: EventFilter | string): number {
-        if (!this.provider) { return 0; }
+        if (!this.provider) {
+            return 0;
+        }
         return this._getRunningEvent(eventName).listenerCount();
     }
 
     listeners(eventName?: EventFilter | string): Array<Listener> {
-        if (!this.provider) { return []; }
+        if (!this.provider) {
+            return [];
+        }
 
         if (eventName == null) {
-            let result: Array<Listener> = [ ];
+            let result: Array<Listener> = [];
             for (let tag in this._runningEvents) {
                 this._runningEvents[tag].listeners().forEach((listener) => {
-                    result.push(listener)
+                    result.push(listener);
                 });
             }
             return result;
@@ -800,7 +888,9 @@ export class Contract {
     }
 
     removeAllListeners(eventName?: EventFilter | string): this {
-        if (!this.provider) { return this; }
+        if (!this.provider) {
+            return this;
+        }
 
         if (eventName == null) {
             for (let tag in this._runningEvents) {
@@ -820,7 +910,9 @@ export class Contract {
     }
 
     off(eventName: EventFilter | string, listener: Listener): this {
-        if (!this.provider) { return this; }
+        if (!this.provider) {
+            return this;
+        }
         let runningEvent = this._getRunningEvent(eventName);
         runningEvent.removeListener(listener);
         this._checkRunningEvents(runningEvent);
@@ -830,5 +922,4 @@ export class Contract {
     removeListener(eventName: EventFilter | string, listener: Listener): this {
         return this.off(eventName, listener);
     }
-
 }

@@ -1,5 +1,5 @@
 import { Log } from '@ethersproject/abstract-provider';
-import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
 import { BytesLike, SignatureLike } from '@ethersproject/bytes';
 export declare const allowedTransactionKeys: {
     [key: string]: boolean;

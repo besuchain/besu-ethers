@@ -26,8 +26,11 @@ export * from './privateTransaction';
 export * from './privacyGroup';
 export declare const utils: {
     computeAddress(key: string | ArrayLike<number>): string;
-    recoverAddress(digest: string | ArrayLike<number>, signature: import("@ethersproject/bytes").SignatureLike): string;
-    serialize(transaction: privateTransactions.PrivateUnsignedTransaction, signature?: import("@ethersproject/bytes").SignatureLike): string;
+    recoverAddress(digest: string | ArrayLike<number>, signature: import('@ethersproject/bytes').SignatureLike): string;
+    serialize(
+        transaction: privateTransactions.PrivateUnsignedTransaction,
+        signature?: import('@ethersproject/bytes').SignatureLike,
+    ): string;
     parse(rawTransaction: string | ArrayLike<number>): privateTransactions.PrivateTransaction;
     allowedTransactionKeys: {
         [key: string]: boolean;
@@ -42,8 +45,14 @@ export declare const utils: {
     };
     encode(object: any): string;
     decode(data: string | ArrayLike<number>): any;
-    arrayify(value: string | number | ArrayLike<number> | ethers.ethers.utils.Hexable, options?: import("@ethersproject/bytes").DataOptions): Uint8Array;
-    hexlify(value: string | number | ArrayLike<number> | ethers.ethers.utils.Hexable, options?: import("@ethersproject/bytes").DataOptions): string;
+    arrayify(
+        value: string | number | ArrayLike<number> | ethers.ethers.utils.Hexable,
+        options?: import('@ethersproject/bytes').DataOptions,
+    ): Uint8Array;
+    hexlify(
+        value: string | number | ArrayLike<number> | ethers.ethers.utils.Hexable,
+        options?: import('@ethersproject/bytes').DataOptions,
+    ): string;
     AbiCoder: typeof ethers.ethers.utils.AbiCoder;
     defaultAbiCoder: ethers.ethers.utils.AbiCoder;
     Fragment: typeof ethers.ethers.utils.Fragment;

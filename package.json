@@ -1,50 +1,50 @@
 {
-  "name": "hyperledger-besu-ethers",
-  "version": "0.1.0",
-  "description": "JavaScript library that extends Ethers.js with Pantheon APIs including private transactions, administration, Clique, IBFT and Txpool",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "scripts": {
-    "buildSol": "cd ./scripts && ./buildSol.sh",
-    "build": "tsc --build ./tsconfig.json",
-    "clean": "tsc --build --clean ./tsconfig.json",
-    "test": "jest --detectOpenHandles --forceExit --runInBand"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/besuchain/hyperledger-besu-ethers.git"
-  },
-  "keywords": [
-    "Hyperledger",
-    "Besu",
-    "PegaSys",
-    "Ethereum",
-    "Enterprise Ethereum Alliance",
-    "EEA",
-    "private",
-    "privacy",
-    "privacy group",
-    "Clique",
-    "IBFT",
-    "JavaScript",
-    "library"
-  ],
-  "author": "Nick Addison",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/besuchain/hyperledger-besu-ethers/issues"
-  },
-  "homepage": "https://github.com/besuchain/hyperledger-besu-ethers#readme",
-  "dependencies": {
-    "ethereum-types": "^3.4.0",
-    "ethereumjs-util": "^7.0.7",
-    "ethers": "5.0.0-beta.157"
-  },
-  "devDependencies": {
-    "@types/jest": "^24.0.17",
-    "ethers-4": "npm:ethers@^4.0.33",
-    "jest": "^24.8.0",
-    "ts-jest": "^24.0.2",
-    "typescript": "^3.5.3"
-  }
+    "name": "hyperledger-besu-ethers",
+    "version": "0.1.0",
+    "description": "JavaScript library that extends Ethers.js with Pantheon APIs including private transactions, administration, Clique, IBFT and Txpool",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "scripts": {
+        "buildSol": "cd ./scripts && ./buildSol.sh",
+        "build": "tsc --build ./tsconfig.json",
+        "clean": "tsc --build --clean ./tsconfig.json",
+        "test": "jest --detectOpenHandles --forceExit --runInBand"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/besuchain/hyperledger-besu-ethers.git"
+    },
+    "keywords": [
+        "Hyperledger",
+        "Besu",
+        "PegaSys",
+        "Ethereum",
+        "Enterprise Ethereum Alliance",
+        "EEA",
+        "private",
+        "privacy",
+        "privacy group",
+        "Clique",
+        "IBFT",
+        "JavaScript",
+        "library"
+    ],
+    "author": "Nick Addison",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/besuchain/hyperledger-besu-ethers/issues"
+    },
+    "homepage": "https://github.com/besuchain/hyperledger-besu-ethers#readme",
+    "dependencies": {
+        "ethereum-types": "^3.4.0",
+        "ethereumjs-util": "^7.0.7",
+        "ethers": "5.0.0-beta.157"
+    },
+    "devDependencies": {
+        "@types/jest": "^24.0.17",
+        "ethers-4": "npm:ethers@^4.0.33",
+        "jest": "^24.8.0",
+        "ts-jest": "^24.0.2",
+        "typescript": "^3.5.3"
+    }
 }

@@ -1,8 +1,17 @@
-import { Fragment, Indexed, Interface, JsonFragment } from "@ethersproject/abi";
-import { Block, BlockTag, Listener, Log, Provider, TransactionReceipt, TransactionRequest, TransactionResponse } from "@ethersproject/abstract-provider";
-import { Signer } from "@ethersproject/abstract-signer";
-import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
-import { UnsignedTransaction } from "@ethersproject/transactions";
+import { Fragment, Indexed, Interface, JsonFragment } from '@ethersproject/abi';
+import {
+    Block,
+    BlockTag,
+    Listener,
+    Log,
+    Provider,
+    TransactionReceipt,
+    TransactionRequest,
+    TransactionResponse,
+} from '@ethersproject/abstract-provider';
+import { Signer } from '@ethersproject/abstract-signer';
+import { BigNumber, BigNumberish } from '@ethersproject/bignumber';
+import { UnsignedTransaction } from '@ethersproject/transactions';
 export interface Overrides {
     gasLimit?: BigNumberish | Promise<BigNumberish>;
     gasPrice?: BigNumberish | Promise<BigNumberish>;
@@ -76,11 +85,13 @@ export declare class Contract {
     private _deployedPromise;
     private _runningEvents;
     private _wrappedEmits;
-    constructor(addressOrName: string, contractInterface: ContractInterface, signerOrProvider: Signer | Provider, runMethodOverride?: (contract: Contract, functionName: string, options: RunOptions) => RunFunction);
-    static getContractAddress(transaction: {
-        from: string;
-        nonce: BigNumberish;
-    }): string;
+    constructor(
+        addressOrName: string,
+        contractInterface: ContractInterface,
+        signerOrProvider: Signer | Provider,
+        runMethodOverride?: (contract: Contract, functionName: string, options: RunOptions) => RunFunction,
+    );
+    static getContractAddress(transaction: { from: string; nonce: BigNumberish }): string;
     static getInterface(contractInterface: ContractInterface): Interface;
     deployed(): Promise<Contract>;
     _deployed(blockTag?: BlockTag): Promise<Contract>;
@@ -93,7 +104,11 @@ export declare class Contract {
     _checkRunningEvents(runningEvent: RunningEvent): void;
     private _wrapEvent;
     private _addEventListener;
-    queryFilter(event: EventFilter, fromBlockOrBlockhash?: BlockTag | string, toBlock?: BlockTag): Promise<Array<Event>>;
+    queryFilter(
+        event: EventFilter,
+        fromBlockOrBlockhash?: BlockTag | string,
+        toBlock?: BlockTag,
+    ): Promise<Array<Event>>;
     on(event: EventFilter | string, listener: Listener): this;
     once(event: EventFilter | string, listener: Listener): this;
     emit(eventName: EventFilter | string, ...args: Array<any>): boolean;

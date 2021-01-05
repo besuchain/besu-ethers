@@ -1,4 +1,4 @@
-import { Signer } from "@ethersproject/abstract-signer";
+import { Signer } from '@ethersproject/abstract-signer';
 import { Wallet } from '@ethersproject/wallet';
 import { PrivateTransactionRequest, PrivateTransactionResponse } from './privateTransaction';
 import { PrivateProvider } from './privateProvider';

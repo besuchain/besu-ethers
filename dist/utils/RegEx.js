@@ -1,5 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+'use strict';
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.ethereumAddress = /^0x([A-Fa-f0-9]{40})$/;
 exports.bytes = /^0x([A-Fa-f0-9]{1,})$/;
 exports.bytes32 = /^0x([A-Fa-f0-9]{64})$/;

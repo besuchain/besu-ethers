@@ -1,8 +1,6 @@
 {
-  "extends": [
-    "config:base"
-  ],
-  "schedule": ["monthly"],
-  "rangeStrategy": "replace",
-  "automerge": true
+    "extends": ["config:base"],
+    "schedule": ["monthly"],
+    "rangeStrategy": "replace",
+    "automerge": true
 }

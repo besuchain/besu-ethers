@@ -46,13 +46,17 @@ export declare class BesuProvider extends PrivateJsonRpcProvider {
     cliqueGetSigners(blockParameter: BlockParameter): Promise<string[]>;
     cliqueGetSignersAtHash(hash: string): Promise<string[]>;
     cliquePropose(signerAddress: string, add: boolean): Promise<boolean>;
-    cliqueGetProposals(): Promise<{
-        [index: string]: boolean;
-    }[]>;
+    cliqueGetProposals(): Promise<
+        {
+            [index: string]: boolean;
+        }[]
+    >;
     ibftDiscardValidatorVote(validatorAddress: string): Promise<boolean>;
-    ibftGetPendingVotes(): Promise<{
-        [index: string]: boolean;
-    }[]>;
+    ibftGetPendingVotes(): Promise<
+        {
+            [index: string]: boolean;
+        }[]
+    >;
     ibftGetValidatorsByBlockHash(hash: string): Promise<string[]>;
     ibftGetValidatorsByBlockNumber(blockParameter: BlockParameter): Promise<string[]>;
     ibftProposeValidatorVote(validatorAddress: string, add: boolean): Promise<boolean>;
