@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/naddison36/hyperledger-besu-ethers.git"
+    "url": "git+https://github.com/besuchain/hyperledger-besu-ethers.git"
   },
   "keywords": [
     "Hyperledger",
@@ -32,10 +32,12 @@
   "author": "Nick Addison",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/naddison36/hyperledger-besu-ethers/issues"
+    "url": "https://github.com/besuchain/hyperledger-besu-ethers/issues"
   },
-  "homepage": "https://github.com/naddison36/hyperledger-besu-ethers#readme",
+  "homepage": "https://github.com/besuchain/hyperledger-besu-ethers#readme",
   "dependencies": {
+    "ethereum-types": "^3.4.0",
+    "ethereumjs-util": "^7.0.7",
     "ethers": "5.0.0-beta.157"
   },
   "devDependencies": {
