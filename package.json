@@ -36,15 +36,17 @@
     },
     "homepage": "https://github.com/besuchain/hyperledger-besu-ethers#readme",
     "dependencies": {
-        "ethereum-types": "^3.4.0",
-        "ethereumjs-util": "^7.0.7",
-        "ethers": "5.0.0-beta.157"
+        "ethers": "^5.0.24"
     },
     "devDependencies": {
         "@types/jest": "^24.0.17",
+        "@typescript-eslint/eslint-plugin": "^4.12.0",
+        "@typescript-eslint/parser": "^4.12.0",
+        "eslint": "^7.17.0",
         "ethers-4": "npm:ethers@^4.0.33",
         "jest": "^24.8.0",
         "ts-jest": "^24.0.2",
+        "tslint-config-prettier": "^1.18.0",
         "typescript": "^3.5.3"
     }
 }

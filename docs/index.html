@@ -1,0 +1,986 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>hyperledger-besu-ethers</title>
+	<meta name="description" content="Documentation for hyperledger-besu-ethers">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">hyperledger-besu-ethers</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1>hyperledger-besu-ethers</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#ethersjs-for-hyperledger-besu" id="ethersjs-for-hyperledger-besu" style="color: inherit; text-decoration: none;">
+					<h1>Ethers.js for Hyperledger Besu</h1>
+				</a>
+				<p><a href="https://badge.fury.io/js/hyperledger-besu-ethers"><img src="https://badge.fury.io/js/hyperledger-besu-ethers.svg" alt="npm version"></a></p>
+				<p>An extension of Richard Moore&#39;s excellent <a href="https://docs.ethers.io/ethers.js/html/">Ethers.js</a>
+					Ethereum JavaScript library that adds support for <a href="https://besu.hyperledger.org/en/latest/Concepts/Privacy/Privacy-Overview/">Hyperledger Besu&#39;s private transactions</a>
+					and <a href="https://besu.hyperledger.org/en/latest/#what-is-hyperledger-besu">Hyperledger Besu</a>&#39;s extended APIs like
+					<a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#admin-methods">Admin</a>,
+					<a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#clique-methods">Clique</a>,
+					<a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#ibft-20-methods">IBFT 2.0</a>,
+					<a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#permissioning-methods">Permissioning</a> and
+					<a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#txpool-methods">Txpool</a>
+				JSON-RPC APIs.</p>
+				<ul>
+					<li><a href="#disclaimer">Disclaimer</a></li>
+					<li><a href="#install">Install</a></li>
+					<li><a href="#usage---private-transaction">Usage - Private Transaction</a><ul>
+							<li><a href="#new-private-classes">New Private Classes</a></li>
+							<li><a href="#privacy-group-management">Privacy Group Management</a></li>
+							<li><a href="#privacy-group-limitations">Privacy Group Limitations</a></li>
+						</ul>
+					</li>
+					<li><a href="#usage---besu-apis">Usage - Besu APIs</a><ul>
+							<li><a href="#administration">Administration</a></li>
+							<li><a href="#clique">Clique</a></li>
+							<li><a href="#ibft-20">IBFT 2.0</a></li>
+							<li><a href="#permissioning">Permissioning</a></li>
+							<li><a href="#txpool">Txpool</a></li>
+						</ul>
+					</li>
+					<li><a href="#hyperledger-besu">Hyperledger Besu</a><ul>
+							<li><a href="#web3js">Web3.js</a></li>
+						</ul>
+					</li>
+					<li><a href="#ethersjs">Ethers.js</a></li>
+					<li><a href="#development">Development</a><ul>
+							<li><a href="#build">Build</a></li>
+							<li><a href="#test">Test</a></li>
+							<li><a href="#publish">Publish</a></li>
+						</ul>
+					</li>
+				</ul>
+				<a href="#disclaimer" id="disclaimer" style="color: inherit; text-decoration: none;">
+					<h1>Disclaimer</h1>
+				</a>
+				<p>This library uses Ethers.js version 5 which is still in experimental status. It is not yet ready for production use. See <a href="#ethersjs">Ethers.js</a> for more details.</p>
+				<p>Besu&#39;s new privacy features are not ready for production use. See <a href="#privacy-group-limitations">Privacy Group Limitations</a> for more details.</p>
+				<a href="#install" id="install" style="color: inherit; text-decoration: none;">
+					<h1>Install</h1>
+				</a>
+				<p>Until hyperledger-besu-ethers is published on npm using the PegaSysEng account, installs will have to be done from this git repository.</p>
+				<pre><code class="language-bash">npm install PegaSysEng/hyperledger-besu-ethers</code></pre>
+				<a href="#usage---private-transaction" id="usage---private-transaction" style="color: inherit; text-decoration: none;">
+					<h1>Usage - Private Transaction</h1>
+				</a>
+				<p>Besu&#39;s private transactions are based off
+					<a href="https://entethalliance.org/">Enterprise Ethereum Alliance&#39;s</a>
+					<a href="https://entethalliance.github.io/client-spec/spec.html">Ethereum Client Specification</a> for
+					<a href="https://entethalliance.github.io/client-spec/spec.html#sec-private-transactions">private transactions</a>.
+				At a high level, it adds the <code>privateFor</code>, <code>privateFrom</code> and <code>restriction</code> transaction properties to the JSON-RPC API calls. The spec is not yet finalised so hopefully it can be brought into line with the features Besu currently has and has planned in its roadmap.</p>
+				<p>Private transactions are supported by PegaSys&#39;s <a href="https://besu.hyperledger.org/en/latest/">Hyperledger Besu</a> Ethereum client and J.P.Morgan&#39;s <a href="https://github.com/jpmorganchase/quorum">Quorum</a> distributed ledger. Unfortunately, Quorum&#39;s and Hyperledger Besu&#39;s JSON-RPC interfaces for private transactions are different and both don&#39;t match the EEA specification, so this library only works with Hyperledger Besu and not Quorum.</p>
+				<a href="#new-private-classes" id="new-private-classes" style="color: inherit; text-decoration: none;">
+					<h2>New Private Classes</h2>
+				</a>
+				<p>See <a href="https://docs.ethers.io/ethers.js/v5-beta/">Ethers.js version 5</a> documentation for details on how the Ethers.js library works. This section will just document the differences for private transactions.</p>
+				<p>New <code>PrivateJsonRpcProvider</code> provider that extends <a href="https://docs.ethers.io/ethers.js/v5-beta/api-providers.html#jsonrpcsigner">JsonRpcProvider</a> and implements the <code>PrivateProvider</code> interface</p>
+				<pre><code class="language-ts"><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> PrivateProvider <span class="hljs-keyword">extends</span> Provider {
+    sendPrivateTransaction(signedTransaction: <span class="hljs-built_in">string</span> | <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-built_in">string</span>&gt;): <span class="hljs-built_in">Promise</span>&lt;PrivateTransactionResponse&gt;;
+    getPrivateTransactionCount(
+        addressOrName: <span class="hljs-built_in">string</span> | <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-built_in">string</span>&gt;,
+        privacyGroupOptions: PrivacyGroupOptions,
+    ): <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-built_in">number</span>&gt;;
+    getPrivateTransactionReceipt(publicTransactionHash: <span class="hljs-built_in">string</span>): <span class="hljs-built_in">Promise</span>&lt;PrivateTransactionReceipt&gt;;
+    getPrivateTransaction(transactionHash: <span class="hljs-built_in">string</span>): <span class="hljs-built_in">Promise</span>&lt;PrivateTransactionResponse&gt;;
+
+    <span class="hljs-comment">// Privacy Group functions</span>
+    createPrivacyGroup(
+        addresses: <span class="hljs-built_in">string</span>[] | <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-built_in">string</span>[]&gt;,
+        name?: <span class="hljs-built_in">string</span> | <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-built_in">string</span>&gt;,
+        description?: <span class="hljs-built_in">string</span> | <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-built_in">string</span>&gt;,
+    ): <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-built_in">string</span>&gt;;
+    deletePrivacyGroup(privacyGroupId: <span class="hljs-built_in">string</span> | <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-built_in">string</span>&gt;): <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-built_in">string</span>&gt;;
+    findPrivacyGroup(members: <span class="hljs-built_in">string</span>[] | <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-built_in">string</span>[]&gt;): <span class="hljs-built_in">Promise</span>&lt;FindPrivacyGroup[]&gt;;
+    getPrivacyPrecompileAddress(): <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-built_in">string</span>&gt;;
+}</code></pre>
+				<p>New <code>PrivateWallet</code> that extends <a href="https://docs.ethers.io/ethers.js/v5-beta/api-wallet.html#wallet">Wallet</a> and implements the <code>PrivateSigner</code> interace</p>
+				<pre><code class="language-ts"><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> PrivateSigner <span class="hljs-keyword">extends</span> Signer {
+    <span class="hljs-keyword">readonly</span> provider: PrivateProvider;
+    privateCall(transaction: PrivateTransactionRequest): <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-built_in">string</span>&gt;;
+    signPrivateTransaction(transaction: PrivateTransactionRequest): <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-built_in">string</span>&gt;;
+    sendPrivateTransaction(transaction: PrivateTransactionRequest): <span class="hljs-built_in">Promise</span>&lt;PrivateTransactionResponse&gt;;
+}</code></pre>
+				<p>The <code>PrivateUnsignedTransaction</code>, <code>PrivateTransaction</code>, <code>PrivateTransactionRequest</code> interfaces have the following privacy fields added to them.</p>
+				<pre><code class="language-ts">    privateFrom?: <span class="hljs-built_in">string</span>;
+    privateFor?: <span class="hljs-built_in">string</span> | <span class="hljs-built_in">string</span>[];
+    restriction?: <span class="hljs-string">&#x27;restricted&#x27;</span> | <span class="hljs-string">&#x27;unrestricted&#x27;</span>;</code></pre>
+				<p>See <a href="./examples/privateTransactions.js">privateTransactions.js</a> for a full example of how a private contract can be deployed and its functions called from different nodes. Here&#39;s a short summary using the <a href="./src/contracts/SimpleStorage.sol">Simple Storage</a> contract.</p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> BesuEthers = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;hyperledger-besu-ethers&#x27;</span>);
+
+<span class="hljs-comment">// Create providers pointing to node 1 in the Privacy Enabled Quickstart Tutorial</span>
+<span class="hljs-keyword">const</span> providerNode1 = <span class="hljs-keyword">new</span> BesuEthers.providers.PrivateJsonRpcProvider(<span class="hljs-string">&#x27;http://localhost:20000&#x27;</span>);
+
+<span class="hljs-comment">// Create a privacy group for nodes 1 and 2. Node 3 will not see the private contract</span>
+<span class="hljs-keyword">const</span> privacyGroupId = <span class="hljs-keyword">await</span> providerNode1.createPrivacyGroup(
+    [<span class="hljs-string">&#x27;A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=&#x27;</span>, <span class="hljs-string">&#x27;Ko2bVqD+nNlNYL5EE7y3IdOnviftjiizpjRt+HTuFBs=&#x27;</span>],
+    <span class="hljs-string">&#x27;Name of top secret group&#x27;</span>,
+    <span class="hljs-string">&#x27;Description of super secret group&#x27;</span>,
+);
+
+<span class="hljs-comment">// Create a wallet which will have address 0x2B5AD5c4795c026514f8317c7a215E218DcCD6cF</span>
+<span class="hljs-keyword">const</span> walletNode1 = <span class="hljs-keyword">new</span> BesuEthers.PrivateWallet(
+    <span class="hljs-string">&#x27;0x0000000000000000000000000000000000000000000000000000000000000002&#x27;</span>,
+    providerNode1,
+);
+
+<span class="hljs-comment">// Simple Storage contract application programming interface (ABI) and Ethereum virtual machine (EVM) byte code</span>
+<span class="hljs-keyword">const</span> abi = [
+    {
+        <span class="hljs-attr">constant</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">inputs</span>: [{ <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;x&#x27;</span>, <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;uint256&#x27;</span> }],
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;set&#x27;</span>,
+        <span class="hljs-attr">outputs</span>: [],
+        <span class="hljs-attr">payable</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">stateMutability</span>: <span class="hljs-string">&#x27;nonpayable&#x27;</span>,
+        <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;function&#x27;</span>,
+    },
+    {
+        <span class="hljs-attr">constant</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">inputs</span>: [],
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;get&#x27;</span>,
+        <span class="hljs-attr">outputs</span>: [{ <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;&#x27;</span>, <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;uint256&#x27;</span> }],
+        <span class="hljs-attr">payable</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">stateMutability</span>: <span class="hljs-string">&#x27;view&#x27;</span>,
+        <span class="hljs-attr">type</span>: <span class="hljs-string">&#x27;function&#x27;</span>,
+    },
+];
+<span class="hljs-keyword">const</span> bytecode =
+    <span class="hljs-string">&#x27;6080604052348015600f57600080fd5b5060ab8061001e6000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c806360fe47b11460375780636d4ce63c146053575b600080fd5b605160048036036020811015604b57600080fd5b5035606b565b005b60596070565b60408051918252519081900360200190f35b600055565b6000549056fea265627a7a72305820b53c3a12a533365b0624ed636be47997f66ab3082086dde2044ab5b5e529c2fd64736f6c634300050a0032&#x27;</span>;
+
+<span class="hljs-comment">// PrivateContractFactory is like Ethers ContractFactory</span>
+<span class="hljs-keyword">const</span> factory = <span class="hljs-keyword">new</span> BesuEthers.PrivateContractFactory(abi, bytecode, walletNode1);
+
+<span class="hljs-comment">// Deploy a private contract using an existing privacy group</span>
+<span class="hljs-keyword">const</span> contractNode1 = <span class="hljs-keyword">await</span> factory.privateDeploy({ <span class="hljs-attr">privateFor</span>: privacyGroupId });
+
+<span class="hljs-comment">// wait until the contract has been deployed</span>
+<span class="hljs-keyword">const</span> deployReceipt = <span class="hljs-keyword">await</span> contractNode1.deployPrivateTransaction.wait();
+
+<span class="hljs-comment">// Send a transaction to call the set function on the SimpleStorage contract</span>
+<span class="hljs-keyword">let</span> tx = <span class="hljs-keyword">await</span> contractNode1.set(<span class="hljs-number">666</span>);
+
+<span class="hljs-comment">// Wait for the transaction to be mined. This returns a transaction receipt</span>
+<span class="hljs-keyword">await</span> tx.wait();
+
+<span class="hljs-comment">// Read the stored value back</span>
+<span class="hljs-keyword">const</span> value = <span class="hljs-keyword">await</span> contractNode1.get();</code></pre>
+				<p>More examples are in the <a href="./src/ts/__tests__/contract.test.ts">src/ts/__tests__/contract.test.ts</a> unit tests.</p>
+				<a href="#privacy-group-management" id="privacy-group-management" style="color: inherit; text-decoration: none;">
+					<h2>Privacy Group Management</h2>
+				</a>
+				<p>Create, find and delete a <a href="https://besu.hyperledger.org/en/latest/Concepts/Privacy/Privacy-Groups/">privacy group</a>.</p>
+				<p>Full code examples using promises <a href="./examples/privacyGroupManagementPromises.js">examples/privacyGroupManagementPromises.js</a> or async/await <a href="./examples/privacyGroupManagementAsync.js">example/privacyGroupManagementAsync.js</a> work against the <a href="https://besu.hyperledger.org/en/latest/Tutorials/Quickstarts/Privacy-Quickstart/">Privacy Enabled Quickstart Tutorial</a>.</p>
+				<p>The <code>PrivateJsonRpcProvider</code> used in the below examples can be instantiated with</p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> providers = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;hyperledger-besu-ethers&#x27;</span>).providers;
+<span class="hljs-keyword">const</span> provider = <span class="hljs-keyword">new</span> providers.PrivateJsonRpcProvider(<span class="hljs-string">&#x27;http://localhost:20000&#x27;</span>);</code></pre>
+				<a href="#create-a-new-privacy-group---priv_createprivacygroup" id="create-a-new-privacy-group---priv_createprivacygroup" style="color: inherit; text-decoration: none;">
+					<h3>Create a new privacy group - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#priv_createprivacygroup">priv_createPrivacyGroup</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> privacyGroupId = <span class="hljs-keyword">await</span> provider.createPrivacyGroup(
+    [<span class="hljs-string">&#x27;A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=&#x27;</span>, <span class="hljs-string">&#x27;Ko2bVqD+nNlNYL5EE7y3IdOnviftjiizpjRt+HTuFBs=&#x27;</span>],
+    <span class="hljs-string">&#x27;Name of group&#x27;</span>,
+    <span class="hljs-string">&#x27;Description of top secret group&#x27;</span>,
+);
+<span class="hljs-built_in">console</span>.log(privacyGroupId); <span class="hljs-comment">// GcFhoLY7EMQg7jxJDC6Aei1GZTN/ZaRepptX48VcUBk=</span></code></pre>
+				<a href="#find-privacy-groups---priv_findprivacygroup" id="find-privacy-groups---priv_findprivacygroup" style="color: inherit; text-decoration: none;">
+					<h3>Find privacy groups - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#priv_findprivacygroup">priv_findPrivacyGroup</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> results = <span class="hljs-keyword">await</span> provider.findPrivacyGroup([
+    <span class="hljs-string">&#x27;A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=&#x27;</span>,
+    <span class="hljs-string">&#x27;Ko2bVqD+nNlNYL5EE7y3IdOnviftjiizpjRt+HTuFBs=&#x27;</span>,
+]);
+<span class="hljs-built_in">console</span>.log(results);
+<span class="hljs-comment">/*
+  [ { privacyGroupId: &#x27;GcFhoLY7EMQg7jxJDC6Aei1GZTN/ZaRepptX48VcUBk=&#x27;, 
+      name: &#x27;Name of group&#x27;,
+      description: &#x27;Description of top secret group&#x27;,
+      type: &#x27;PANTHEON&#x27;,
+      members:
+       [ &#x27;A1aVtMxLCUHmBVHXoZzzBgPbW/wj5axDpW9X8l91SGo=&#x27;,
+         &#x27;Ko2bVqD+nNlNYL5EE7y3IdOnviftjiizpjRt+HTuFBs=&#x27; ] } ]
+   */</span></code></pre>
+				<a href="#delete-privacy-group---priv_deleteprivacygroup" id="delete-privacy-group---priv_deleteprivacygroup" style="color: inherit; text-decoration: none;">
+					<h3>Delete privacy group - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#priv_deleteprivacygroup">priv_deletePrivacyGroup</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> deletedId = <span class="hljs-keyword">await</span> provider.deletePrivacyGroup(privacyGroupId);
+<span class="hljs-built_in">console</span>.log(deletedId); <span class="hljs-comment">// GcFhoLY7EMQg7jxJDC6Aei1GZTN/ZaRepptX48VcUBk=</span></code></pre>
+				<a href="#privacy-group-limitations" id="privacy-group-limitations" style="color: inherit; text-decoration: none;">
+					<h2>Privacy Group Limitations</h2>
+				</a>
+				<p>There are a number of limitations in the Besu 1.2 release that is being addressed in future releases:</p>
+				<ul>
+					<li>There is no way to check if a private transaction succeeded or failed as there is no <code>status</code> or <code>gasUsed</code> fields on the private transaction receipt.</li>
+					<li>Calling read-only functions are done via sending a signed transaction as there is no equivalent of <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#eth_call">eth_call</a> for private transactions.</li>
+					<li>Private transactions default to 10 million gas limit as there is no equivalent of <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#eth_estimategas">eth_estimateGas</a> to estimate the gas of a private transaction. This gas limit can be overridden via Ethers.js&#39; optional override object.</li>
+					<li>The client must wait until a contract has been mined before calling a contract method. Ethers.js supports calling function methods before a deployed contract has been mined by polling <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#eth_getcode">eth_getCode</a>. There is no equivalent method for private transactions.</li>
+					<li>You can&#39;t get events from private transactions as there is no equivalent of <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#eth_getlogs">getLogs</a> for private transactions.</li>
+					<li>You can not add/remove nodes to/from a privacy group.</li>
+				</ul>
+				<a href="#usage---besu-apis" id="usage---besu-apis" style="color: inherit; text-decoration: none;">
+					<h1>Usage - Besu APIs</h1>
+				</a>
+				<p>A new <code>BesuProvider</code> provider that extends the new <code>PrivateJsonRpcProvider</code> class adds the Besu specifics APIs that are not to do with private transactions. eg Admin, Clique, IBFT, Txpool.</p>
+				<p>The <code>BesuProvider</code> used in the below examples can be instantiated with</p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> providers = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;hyperledger-besu-ethers&#x27;</span>).providers;
+<span class="hljs-keyword">const</span> provider = <span class="hljs-keyword">new</span> providers.BesuProvider(<span class="hljs-string">&#x27;http://localhost:20000&#x27;</span>);</code></pre>
+				<a href="#administration" id="administration" style="color: inherit; text-decoration: none;">
+					<h2>Administration</h2>
+				</a>
+				<p>Calls Hyperledger Besu&#39;s <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#admin-methods">administration</a> JSON-RPC APIs.
+				See <a href="./examples/admin.js">examples/admin.js</a> for the full example code using async/await.</p>
+				<p>The admin methods require the <code>ADMIN</code> API methods to be enabled by Hyperledger Besu&#39;s <a href="http://besu.hyperledger.org/en/latest/Reference/CLI/CLI-Syntax/#rpc-http-api">--rpc-http-api</a> command line option.</p>
+				<a href="#get-module-versions---rpc_modules" id="get-module-versions---rpc_modules" style="color: inherit; text-decoration: none;">
+					<h3>Get module versions - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#rpc_modules">rpc_modules</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> moduleVersions = <span class="hljs-keyword">await</span> provider.getModuleVersions();
+<span class="hljs-built_in">console</span>.log(moduleVersions); <span class="hljs-comment">// {eea: &#x27;1.0&#x27;, web3: &#x27;1.0&#x27;, eth: &#x27;1.0&#x27;, admin: &#x27;1.0&#x27;, priv: &#x27;1.0&#x27;, net: &#x27;1.0&#x27;}</span></code></pre>
+				<a href="#change-log-level---admin_changeloglevel" id="change-log-level---admin_changeloglevel" style="color: inherit; text-decoration: none;">
+					<h3>Change log level - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#admin_changeloglevel">admin_changeLogLevel</a></h3>
+				</a>
+				<p>See <a href="https://besu.hyperledger.org/en/latest/Reference/CLI/CLI-Syntax/#logging">logging</a> for the allowed log levels.</p>
+				<pre><code class="language-js"><span class="hljs-keyword">await</span> provider.changeLogLevel(<span class="hljs-string">&#x27;TRACE&#x27;</span>);</code></pre>
+				<a href="#get-node-information---admin_nodeinfo" id="get-node-information---admin_nodeinfo" style="color: inherit; text-decoration: none;">
+					<h3>Get node information - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#admin_nodeinfo">admin_nodeInfo</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> nodeInfo = <span class="hljs-keyword">await</span> provider.getNodeInfo();
+<span class="hljs-built_in">console</span>.log(nodeInfo);
+<span class="hljs-comment">/*
+{ enode:
+   &#x27;enode://192f022ba160677f05283443a6e548551b95faebbce659823cacd87489401f914bf34cd61f4905c0e6c19ea4ccd0cb91aa45041536f1e7f759e8caa323a148cc@127.0.0.1:30303&#x27;,
+  listenAddr: &#x27;127.0.0.1:30303&#x27;,
+  ip: &#x27;127.0.0.1&#x27;,
+  name: &#x27;besu/v1.3.0/linux-x86_64/oracle_openjdk-java-11&#x27;,
+  id:
+   &#x27;192f022ba160677f05283443a6e548551b95faebbce659823cacd87489401f914bf34cd61f4905c0e6c19ea4ccd0cb91aa45041536f1e7f759e8caa323a148cc&#x27;,
+  ports: { discovery: 30303, listener: 30303 },
+  protocols:
+   { eth:
+      { config: [Object],
+        difficulty: 65536,
+        genesis:
+         &#x27;0xa08d1edb37ba1c62db764ef7c2566cbe368b850f5b3762c6c24114a3fd97b87f&#x27;,
+        head:
+         &#x27;0xa08d1edb37ba1c62db764ef7c2566cbe368b850f5b3762c6c24114a3fd97b87f&#x27;,
+        network: 2018 } } }
+*/</span></code></pre>
+				<a href="#get-peers---admin_peers" id="get-peers---admin_peers" style="color: inherit; text-decoration: none;">
+					<h3>Get peers - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#admin_peers">admin_peers</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> peers = <span class="hljs-keyword">await</span> provider.getPeers();
+<span class="hljs-built_in">console</span>.log(peers);
+<span class="hljs-comment">/*
+[ { version: &#x27;0x5&#x27;,
+    name: &#x27;besu/v1.3.0/linux-x86_64/oracle_openjdk-java-11&#x27;,
+    caps: [ &#x27;eth/62&#x27;, &#x27;eth/63&#x27; ],
+    network:
+     { localAddress: &#x27;172.21.0.9:30303&#x27;,
+       remoteAddress: &#x27;172.21.0.5:50758&#x27; },
+    port: &#x27;0x765f&#x27;,
+    id:
+     &#x27;0x048781b21b8df1d29fc93b7f47a1e6483be25dc2442f2f0f42514d13b43853a1d37a8b6a8ef4178bf02a2d65b60292e47f0df224c6c92764e664c7275f43aad3&#x27; },
+  { version: &#x27;0x5&#x27;,
+    name: &#x27;besu/v1.3.0/linux-x86_64/oracle_openjdk-java-11&#x27;,
+    caps: [ &#x27;eth/62&#x27;, &#x27;eth/63&#x27; ],
+    network:
+     { localAddress: &#x27;172.21.0.9:54614&#x27;,
+       remoteAddress: &#x27;172.21.0.10:30303&#x27; },
+    port: &#x27;0x765f&#x27;,
+    id:
+     &#x27;0xcdaaefe4e76f5ca77b5a365baab2f81e585ddad4ff8b21052420b653b3f736af8a300a8497cac63d3ad6cdefcec01463e9119ace11cec52ccb9d4b3325990870&#x27; } ]
+*/</span></code></pre>
+				<a href="#remove-peer---admin_removepeer" id="remove-peer---admin_removepeer" style="color: inherit; text-decoration: none;">
+					<h3>Remove peer - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#admin_removePeer">admin_removePeer</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> success = <span class="hljs-keyword">await</span> provider.removePeer(
+    <span class="hljs-string">&#x27;enode://af80b90d25145da28c583359beb47b21796b2fe1a23c1511e443e7a64dfdb27d7434c380f0aa4c500e220aa1a9d068514b1ff4d5019e624e7ba1efe82b340a59@127.0.0.1:30304&#x27;</span>,
+);
+<span class="hljs-built_in">console</span>.log(success); <span class="hljs-comment">// true</span></code></pre>
+				<a href="#add-peer---admin_addpeer" id="add-peer---admin_addpeer" style="color: inherit; text-decoration: none;">
+					<h3>Add peer - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#admin_addPeer">admin_addPeer</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> success = <span class="hljs-keyword">await</span> provider.addPeer(
+    <span class="hljs-string">&#x27;enode://af80b90d25145da28c583359beb47b21796b2fe1a23c1511e443e7a64dfdb27d7434c380f0aa4c500e220aa1a9d068514b1ff4d5019e624e7ba1efe82b340a59@127.0.0.1:30304&#x27;</span>,
+);
+<span class="hljs-built_in">console</span>.log(success); <span class="hljs-comment">// true</span></code></pre>
+				<a href="#clique" id="clique" style="color: inherit; text-decoration: none;">
+					<h2>Clique</h2>
+				</a>
+				<p>Calls Hyperledger Besu&#39;s <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#clique-methods">Clique</a> JSON-RPC APIs.
+				See <a href="./examples/clique.js">examples/clique.js</a> for the full example code using async/await.</p>
+				<p>The Clique methods require the <code>CLIQUE</code> API methods to be enabled by Hyperledger Besu&#39;s <a href="https://besu.hyperledger.org/en/latest/Reference/CLI/CLI-Syntax/#rpc-http-api">--rpc-http-api</a> command line option.</p>
+				<a href="#get-signers---clique_getsigners" id="get-signers---clique_getsigners" style="color: inherit; text-decoration: none;">
+					<h3>Get Signers - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#clique_getSigners">clique_getSigners</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> signers = <span class="hljs-keyword">await</span> provider.cliqueGetSigners(<span class="hljs-string">&#x27;latest&#x27;</span>);
+<span class="hljs-built_in">console</span>.log(signers);
+<span class="hljs-comment">// [ &quot;0x42eb768f2244c8811c63729a21a3569731535f06&quot;, &quot;0x7ffc57839b00206d1ad20c69a1981b489f772031&quot;, &quot;0xb279182d99e65703f0076e4812653aab85fca0f0&quot; ]</span></code></pre>
+				<a href="#get-signers-at-hash---clique_getsignersathash" id="get-signers-at-hash---clique_getsignersathash" style="color: inherit; text-decoration: none;">
+					<h3>Get Signers at hash - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#clique_getsignersathash">clique_getSignersAtHash</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> signers = <span class="hljs-keyword">await</span> provider.cliqueGetSignersAtHash(
+    <span class="hljs-string">&#x27;0x98b2ddb5106b03649d2d337d42154702796438b3c74fd25a5782940e84237a48&#x27;</span>,
+);
+<span class="hljs-built_in">console</span>.log(signers);
+<span class="hljs-comment">// [ &quot;0x42eb768f2244c8811c63729a21a3569731535f06&quot;, &quot;0x7ffc57839b00206d1ad20c69a1981b489f772031&quot;, &quot;0xb279182d99e65703f0076e4812653aab85fca0f0&quot; ]</span></code></pre>
+				<a href="#propose-signer---clique_propose" id="propose-signer---clique_propose" style="color: inherit; text-decoration: none;">
+					<h3>Propose Signer - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#clique_propose">clique_propose</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> success = <span class="hljs-keyword">await</span> provider.cliquePropose(<span class="hljs-string">&#x27;0xFE3B557E8Fb62b89F4916B721be55cEb828dBd73&#x27;</span>, <span class="hljs-literal">true</span>);
+<span class="hljs-built_in">console</span>.log(success); <span class="hljs-comment">// true</span></code></pre>
+				<a href="#discard-proposal---clique_discard" id="discard-proposal---clique_discard" style="color: inherit; text-decoration: none;">
+					<h3>Discard Proposal - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#clique_discard">clique_discard</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> success = <span class="hljs-keyword">await</span> provider.cliqueDiscard(<span class="hljs-string">&#x27;0xFE3B557E8Fb62b89F4916B721be55cEb828dBd73&#x27;</span>);
+<span class="hljs-built_in">console</span>.log(success); <span class="hljs-comment">// true</span></code></pre>
+				<a href="#get-proposals---clique_proposals" id="get-proposals---clique_proposals" style="color: inherit; text-decoration: none;">
+					<h3>Get Proposals - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#clique_proposals">clique_proposals</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> proposals = <span class="hljs-keyword">await</span> provider.cliqueGetProposals();
+<span class="hljs-built_in">console</span>.log(proposals);
+<span class="hljs-comment">/*
+{
+    &quot;0x42eb768f2244c8811c63729a21a3569731535f07&quot;: false,
+    &quot;0xFE3B557E8Fb62b89F4916B721be55cEb828dBd73&quot;: true
+}
+*/</span></code></pre>
+				<a href="#ibft-20" id="ibft-20" style="color: inherit; text-decoration: none;">
+					<h2>IBFT 2.0</h2>
+				</a>
+				<p>Calls Hyperledger Besu&#39;s <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#ibft-20-methods">IBFT 2.0</a> JSON-RPC APIs.
+				See <a href="./examples/IBFT.js">examples/IBFT.js</a> for the full example code using async/await.</p>
+				<p>The IBFT methods require the <code>IBFT</code> API methods to be enabled by Hyperledger Besu&#39;s <a href="https://besu.hyperledger.org/en/latest/Reference/CLI/CLI-Syntax/#rpc-http-api">--rpc-http-api</a> command line option.</p>
+				<a href="#get-validators-by-block-parameter---ibft_getvalidatorsbyblocknumber" id="get-validators-by-block-parameter---ibft_getvalidatorsbyblocknumber" style="color: inherit; text-decoration: none;">
+					<h3>Get Validators by block parameter - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#ibft_getvalidatorsbyblocknumber">ibft_getValidatorsByBlockNumber</a></h3>
+				</a>
+				<p>See <a href="https://besu.hyperledger.org/en/latest/HowTo/Interact/APIs/Using-JSON-RPC-API/#block-parameter">Block Number</a> for allowed parameter values.</p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> validators = <span class="hljs-keyword">await</span> provider.ibftGetValidatorsByBlockNumber(<span class="hljs-string">&#x27;latest&#x27;</span>);
+<span class="hljs-built_in">console</span>.log(validators);
+<span class="hljs-comment">// [ &quot;0x42d4287eac8078828cf5f3486cfe601a275a49a5&quot;, &quot;0xb1b2bc9582d2901afdc579f528a35ca41403fa85&quot;, &quot;0xef1bfb6a12794615c9b0b5a21e6741f01e570185&quot; ]</span></code></pre>
+				<a href="#get-validators-at-hash---ibft_getvalidatorsbyblockhash" id="get-validators-at-hash---ibft_getvalidatorsbyblockhash" style="color: inherit; text-decoration: none;">
+					<h3>Get Validators at hash - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#ibft_getvalidatorsbyblockhash">ibft_getValidatorsByBlockHash</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> validators = <span class="hljs-keyword">await</span> provider.ibftGetValidatorsByBlockHash(
+    <span class="hljs-string">&#x27;0xbae7d3feafd743343b9a4c578cab5e5d65eb735f6855fb845c00cab356331256&#x27;</span>,
+);
+<span class="hljs-built_in">console</span>.log(validators);
+<span class="hljs-comment">// [ &quot;0x42d4287eac8078828cf5f3486cfe601a275a49a5&quot;, &quot;0xb1b2bc9582d2901afdc579f528a35ca41403fa85&quot;, &quot;0xef1bfb6a12794615c9b0b5a21e6741f01e570185&quot; ]</span></code></pre>
+				<a href="#propose-validator-vote---ibft_proposevalidatorvote" id="propose-validator-vote---ibft_proposevalidatorvote" style="color: inherit; text-decoration: none;">
+					<h3>Propose Validator Vote - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#ibft_proposevalidatorvote">ibft_proposeValidatorVote</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> success = <span class="hljs-keyword">await</span> provider.ibftProposeValidatorVote(<span class="hljs-string">&#x27;0xFE3B557E8Fb62b89F4916B721be55cEb828dBd73&#x27;</span>, <span class="hljs-literal">true</span>);
+<span class="hljs-built_in">console</span>.log(success); <span class="hljs-comment">// true</span></code></pre>
+				<a href="#discard-validator-vote---ibft_discardvalidatorvote" id="discard-validator-vote---ibft_discardvalidatorvote" style="color: inherit; text-decoration: none;">
+					<h3>Discard Validator Vote - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#ibft_discardvalidatorvote">ibft_discardValidatorVote</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> success = <span class="hljs-keyword">await</span> provider.ibftDiscardValidatorVote(<span class="hljs-string">&#x27;0xFE3B557E8Fb62b89F4916B721be55cEb828dBd73&#x27;</span>);
+<span class="hljs-built_in">console</span>.log(success); <span class="hljs-comment">// true</span></code></pre>
+				<a href="#get-validator-votes---ibft_getpendingvotes" id="get-validator-votes---ibft_getpendingvotes" style="color: inherit; text-decoration: none;">
+					<h3>Get Validator Votes - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#ibft_getpendingvotes">ibft_getPendingVotes</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> validatorVotes = <span class="hljs-keyword">await</span> provider.ibftGetPendingVotes();
+<span class="hljs-built_in">console</span>.log(validatorVotes);
+<span class="hljs-comment">/*
+  {
+    &quot;0x42eb768f2244c8811c63729a21a3569731535f07&quot;: false,
+    &quot;0xFE3B557E8Fb62b89F4916B721be55cEb828dBd73&quot;: true
+  }
+*/</span></code></pre>
+				<a href="#permissioning" id="permissioning" style="color: inherit; text-decoration: none;">
+					<h2>Permissioning</h2>
+				</a>
+				<p>Calls Hyperledger Besu&#39;s <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#permissioning-methods">permissioning</a> JSON-RPC APIs.
+				See <a href="./examples/permissioning.js">examples/permissioning.js</a> for the full example code using async/await.</p>
+				<p>The local permissioning methods require the <code>PERM</code> API methods to be enabled by Hyperledger Besu&#39;s <a href="https://besu.hyperledger.org/en/latest/Reference/CLI/CLI-Syntax/#rpc-http-api">--rpc-http-api</a> command line option.</p>
+				<p>Hyperledger Besu&#39;s account and node whitelists also need to be configured for the below API calls to work. See Hyperledger Besu <a href="https://besu.hyperledger.org/en/latest/Permissions/Local-Permissioning/">Local Permissioning</a> documentation for how to do this.</p>
+				<a href="#add-accounts-to-whitelist---perm_addaccountstowhitelist" id="add-accounts-to-whitelist---perm_addaccountstowhitelist" style="color: inherit; text-decoration: none;">
+					<h3>Add Accounts To Whitelist - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#perm_addaccountstowhitelist">perm_addAccountsToWhitelist</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> provider.addAccountsToWhitelist([
+    <span class="hljs-string">&#x27;0xb9b81ee349c3807e46bc71aa2632203c5b462032&#x27;</span>,
+    <span class="hljs-string">&#x27;0xb9b81ee349c3807e46bc71aa2632203c5b462034&#x27;</span>,
+]);
+<span class="hljs-built_in">console</span>.log(result); <span class="hljs-comment">// Success</span></code></pre>
+				<a href="#get-accounts-on-whitelist---perm_getaccountswhitelist" id="get-accounts-on-whitelist---perm_getaccountswhitelist" style="color: inherit; text-decoration: none;">
+					<h3>Get Accounts on Whitelist - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#perm_getaccountswhitelist">perm_getAccountsWhitelist</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> accounts = <span class="hljs-keyword">await</span> provider.getAccountsWhitelist();
+<span class="hljs-built_in">console</span>.log(accounts); <span class="hljs-comment">// [&quot;0xb9b81ee349c3807e46bc71aa2632203c5b462032&quot;, &quot;0xb9b81ee349c3807e46bc71aa2632203c5b462034&quot;]</span></code></pre>
+				<a href="#remove-accounts-to-whitelist---perm_removeaccountsfromwhitelist" id="remove-accounts-to-whitelist---perm_removeaccountsfromwhitelist" style="color: inherit; text-decoration: none;">
+					<h3>Remove Accounts To Whitelist - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#perm_removeAccountsfromwhitelist">perm_removeAccountsFromWhitelist</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> provider.removeAccountsFromWhitelist([
+    <span class="hljs-string">&#x27;0xb9b81ee349c3807e46bc71aa2632203c5b462032&#x27;</span>,
+    <span class="hljs-string">&#x27;0xb9b81ee349c3807e46bc71aa2632203c5b462034&#x27;</span>,
+]);
+<span class="hljs-built_in">console</span>.log(result); <span class="hljs-comment">// Success</span></code></pre>
+				<a href="#add-nodes-to-whitelist---perm_addnodestowhitelist" id="add-nodes-to-whitelist---perm_addnodestowhitelist" style="color: inherit; text-decoration: none;">
+					<h3>Add Nodes To Whitelist - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#perm_addnodestowhitelist">perm_addNodesToWhitelist</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> provider.addNodesToWhitelist([
+    <span class="hljs-string">&#x27;enode://7e4ef30e9ec683f26ad76ffca5b5148fa7a6575f4cfad4eb0f52f9c3d8335f4a9b6f9e66fcc73ef95ed7a2a52784d4f372e7750ac8ae0b544309a5b391a23dd7@127.0.0.1:30303&#x27;</span>,
+    <span class="hljs-string">&#x27;enode://2feb33b3c6c4a8f77d84a5ce44954e83e5f163e7a65f7f7a7fec499ceb0ddd76a46ef635408c513d64c076470eac86b7f2c8ae4fcd112cb28ce82c0d64ec2c94@127.0.0.1:30304&#x27;</span>,
+]);
+<span class="hljs-built_in">console</span>.log(result); <span class="hljs-comment">// Success</span></code></pre>
+				<a href="#get-nodes-on-whitelist---perm_getnodeswhitelist" id="get-nodes-on-whitelist---perm_getnodeswhitelist" style="color: inherit; text-decoration: none;">
+					<h3>Get Nodes on Whitelist - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#perm_getnodeswhitelist">perm_getNodesWhitelist</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> nodes = <span class="hljs-keyword">await</span> provider.getNodesWhitelist();
+<span class="hljs-built_in">console</span>.log(nodes);
+<span class="hljs-comment">/* [
+  &quot;enode://7b61d5ee4b44335873e6912cb5dd3e3877c860ba21417c9b9ef1f7e500a82213737d4b269046d0669fb2299a234ca03443f25fe5f706b693b3669e5c92478ade@127.0.0.1:30305&quot;,
+  &quot;enode://2feb33b3c6c4a8f77d84a5ce44954e83e5f163e7a65f7f7a7fec499ceb0ddd76a46ef635408c513d64c076470eac86b7f2c8ae4fcd112cb28ce82c0d64ec2c94@127.0.0.1:30304&quot;
+] */</span></code></pre>
+				<a href="#remove-nodes-to-whitelist---perm_removenodesfromwhitelist" id="remove-nodes-to-whitelist---perm_removenodesfromwhitelist" style="color: inherit; text-decoration: none;">
+					<h3>Remove Nodes To Whitelist - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#perm_removenodesfromwhitelist">perm_removeNodesFromWhitelist</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> provider.removeNodesFromWhitelist([
+    <span class="hljs-string">&#x27;enode://7e4ef30e9ec683f26ad76ffca5b5148fa7a6575f4cfad4eb0f52f9c3d8335f4a9b6f9e66fcc73ef95ed7a2a52784d4f372e7750ac8ae0b544309a5b391a23dd7@127.0.0.1:30303&#x27;</span>,
+    <span class="hljs-string">&#x27;enode://2feb33b3c6c4a8f77d84a5ce44954e83e5f163e7a65f7f7a7fec499ceb0ddd76a46ef635408c513d64c076470eac86b7f2c8ae4fcd112cb28ce82c0d64ec2c94@127.0.0.1:30304&#x27;</span>,
+]);
+<span class="hljs-built_in">console</span>.log(result); <span class="hljs-comment">// Success</span></code></pre>
+				<a href="#reload-permissions-from-file---perm_reloadpermissionsfromfile" id="reload-permissions-from-file---perm_reloadpermissionsfromfile" style="color: inherit; text-decoration: none;">
+					<h3>Reload Permissions From File - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#perm_reloadpermissionsfromfile">perm_reloadPermissionsFromFile</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> provider.reloadPermissionsFromFile();
+<span class="hljs-built_in">console</span>.log(result); <span class="hljs-comment">// Success</span></code></pre>
+				<a href="#txpool" id="txpool" style="color: inherit; text-decoration: none;">
+					<h2>Txpool</h2>
+				</a>
+				<p>The txpool methods require the <code>TXPOOL</code> API methods to be enabled by Hyperledger Besu&#39;s <a href="https://besu.hyperledger.org/en/latest/Reference/CLI/CLI-Syntax/#rpc-http-api">--rpc-http-api</a> command line option.</p>
+				<a href="#besu-statistics---txpool_besustatistics" id="besu-statistics---txpool_besustatistics" style="color: inherit; text-decoration: none;">
+					<h3>Besu Statistics - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#txpool_besustatistics">txpool_besuStatistics</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> stats = <span class="hljs-keyword">await</span> provider.getBesuStatistics();
+<span class="hljs-built_in">console</span>.log(stats); <span class="hljs-comment">// {&quot;maxSize&quot;: 4096, &quot;localCount&quot;: 1, &quot;remoteCount&quot;: 0}</span></code></pre>
+				<a href="#besu-transactions---txpool_besutransactions" id="besu-transactions---txpool_besutransactions" style="color: inherit; text-decoration: none;">
+					<h3>Besu Transactions - <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/#txpool_besutransactions">txpool_besuTransactions</a></h3>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> results = <span class="hljs-keyword">await</span> provider.getBesuTransactions();
+<span class="hljs-built_in">console</span>.log(results);
+<span class="hljs-comment">/* [
+    {
+        &quot;hash&quot;: &quot;0x8a66830098be4006a3f63a03b6e9b67aa721e04bd6b46d420b8f1937689fb4f1&quot;,
+        &quot;isReceivedFromLocalSource&quot;: true,
+        &quot;addedToPoolAt&quot;: &quot;2019-03-21T01:35:50.911Z&quot;
+    },
+    {
+        &quot;hash&quot;: &quot;0x41ee803c3987ceb5bcea0fad7a76a8106a2a6dd654409007d9931032ea54579b&quot;,
+        &quot;isReceivedFromLocalSource&quot;: true,
+        &quot;addedToPoolAt&quot;: &quot;2019-03-21T01:36:00.374Z&quot;
+    }]
+*/</span></code></pre>
+				<a href="#hyperledger-besu" id="hyperledger-besu" style="color: inherit; text-decoration: none;">
+					<h1>Hyperledger Besu</h1>
+				</a>
+				<p><a href="https://besu.hyperledger.org/en/latest/#what-is-hyperledger-besu">Hyperledger Besu</a> is an open-source Ethereum client written in Java. It runs on the Ethereum public network, private networks, and test networks such as Rinkeby, Ropsten, and Görli. Hyperledger Besu implements Proof of Work (Ethash) and Proof of Authority (IBFT 2.0 and Clique) consensus mechanisms.</p>
+				<p>This library will only work against <a href="https://github.com/hyperledger/besu/releases/tag/1.3.0">Hyperledger Besu 1.3.0</a> and above. It will not work against the 1.2.xPa releases.
+				The library uses Hyperledger Besu&#39;s <a href="https://besu.hyperledger.org/en/latest/Reference/API-Methods/">JSON-RPC APIs</a> over HTTP.</p>
+				<p>See <a href="https://besu.hyperledger.org/en/latest/Concepts/Privacy/Privacy-Overview/">Privacy Overview</a> for more details on how Hyperledger Besu supports private transactions.</p>
+				<p><a href="https://besu.hyperledger.org/en/latest/Tutorials/Quickstarts/Privacy-Quickstart/">Private Network with Privacy Enabled Quickstart Tutorial</a> steps through setting up a three node private network managed by Docker Compose. The TL;DR version is</p>
+				<pre><code class="language-bash">git <span class="hljs-built_in">clone</span> https://github.com/PegaSysEng/besu-quickstart.git
+<span class="hljs-built_in">cd</span> besu-quickstart/privacy
+./run.sh</code></pre>
+				<p>You can see the logs from the nodes running on docker-compose with</p>
+				<pre><code class="language-bash">./list.sh   <span class="hljs-comment"># lists the status of the docker servers. ie are they up or down</span>
+./logs.sh   <span class="hljs-comment"># tail the logs of each of the docker services</span>
+./stop.sh   <span class="hljs-comment"># shuts down all of the docker services</span>
+./remove.sh <span class="hljs-comment"># stops and then removes the server volumes so the chain will start back at block 0</span></code></pre>
+				<p>A blockchain explorer will be at <a href="http://localhost:32768">http://localhost:32768</a></p>
+				<p>To tail the logs of a specific docker service. eg node 1</p>
+				<pre><code class="language-bash">docker-compose logs -f node1 orion1</code></pre>
+				<p>To list the cpu and memory used by each container</p>
+				<pre><code class="language-bash">docker ps -q | xargs  docker stats --no-stream</code></pre>
+				<p>To bash into the to the Hyperledger Besu image used by the quickstart</p>
+				<pre><code class="language-bash">docker run -it --entrypoint=sh quickstart/besu:develop-privacy</code></pre>
+				<p>To bash into a running docker-compose service. eg node1</p>
+				<pre><code class="language-bash">docker-compose <span class="hljs-built_in">exec</span> node1 sh</code></pre>
+				<p>To pull the latest Hyperledger Besu and Orion docker images from the <code>develop</code> branch and build a <code>quickstart/besu:develop-privacy</code> image</p>
+				<pre><code class="language-bash"><span class="hljs-built_in">cd</span> privacy
+docker image pull hyperledger/besu:develop
+docker-compose build bootnode
+docker-compose build --pull orion1</code></pre>
+				<p>The Hyperledger Besu tags for the Docker images can be found at <a href="https://hub.docker.com/r/hyperledger/besu/tags">https://hub.docker.com/r/hyperledger/besu/tags</a></p>
+				<p>There are three pre-funded accounts if you run Hyperledger Besu in dev mode. See the <code>alloc</code> section in <a href="https://github.com/hyperledger/besu/blob/master/config/src/main/resources/dev.json">https://github.com/hyperledger/besu/blob/master/config/src/main/resources/dev.json</a></p>
+				<a href="#web3js" id="web3js" style="color: inherit; text-decoration: none;">
+					<h2>Web3.js</h2>
+				</a>
+				<p>Hyperledger Besu has an <a href="https://github.com/PegaSysEng/web3js-eea#eea-javascript-libraries---eeajs">EEA JavaScript library</a> that is an extension of the <a href="https://web3js.readthedocs.io/en/1.0/">Web3.js</a> JavaScript library. The EEA JavaScript library is an alternative to this Ethers.js extended library. It can also be used as a reference to how Hyperledger Besu privacy transactions are encoded.
+				The EEA Web3js library does not include the Hyperledger Besu extended APIs like admin, clique, ibft, txpool, perm and priv.</p>
+				<a href="#ethersjs" id="ethersjs" style="color: inherit; text-decoration: none;">
+					<h1>Ethers.js</h1>
+				</a>
+				<p>Ethers.js version 5 is used as its modular packages makes it easier to extend the classes to add private transaction support. See Richard&#39;s blog on <a href="https://blog.ricmoo.com/beta-release-ethers-js-v5-59d0db222d7b">Beta Release: ethers.js v5</a> for more details.</p>
+				<p>For regression testing purposes, ethers version 4 is also installed in the devDependencies. This uses an npm alias which is available from npm version 6.9.0. See (this)[<a href="https://stackoverflow.com/a/56495895/3144809%5D">https://stackoverflow.com/a/56495895/3144809]</a> Stack Overflow answer for more information.</p>
+				<pre><code class="language-bash">npm i ethers-4@npm:ethers@4.0.33</code></pre>
+				<p>Ethers.js links</p>
+				<ul>
+					<li><a href="https://docs.ethers.io/ethers.js/v5-beta/">Version 5 Documentation</a></li>
+					<li><a href="https://docs.ethers.io/ethers.js/">Version 4 Documentation</a></li>
+					<li><a href="https://github.com/ethers-io/ethers.js/tree/ethers-v5-beta">Version 5 code on branch ethers-v5-beta</a></li>
+					<li><a href="https://gitter.im/ethers-io/Lobby">Ethers Gitter</a></li>
+				</ul>
+				<a href="#development" id="development" style="color: inherit; text-decoration: none;">
+					<h1>Development</h1>
+				</a>
+				<p>The following is only required if you are contributing to the develop of this library.</p>
+				<a href="#build" id="build" style="color: inherit; text-decoration: none;">
+					<h2>Build</h2>
+				</a>
+				<p>This library has been developed with TypeScript so it needs to be compiled to JavaScript with</p>
+				<pre><code class="language-js">npm run build</code></pre>
+				<p>This uses the <a href="./tsconfig.json">tsconfig.json</a> TypeScript config file and outputs the JavaScript and type definition files to the <a href="./dist">dist</a> folder.</p>
+				<a href="#solidity" id="solidity" style="color: inherit; text-decoration: none;">
+					<h3>Solidity</h3>
+				</a>
+				<p>The Solidity contracts used in the examples and tests can be compiled with the following.</p>
+				<pre><code class="language-js">npm run buildSol</code></pre>
+				<p>This uses the <a href="./scripts/buildSol.sh">scripts/buildSol.sh</a> script which uses a locally installed Solidity compiler <code>solc</code>. The ABI and evm files from compilation are output to the <a href="./dist/abis">dist/abis</a> folder.</p>
+				<p>See the Solidity documentation on how to install the <a href="https://solidity.readthedocs.io/en/latest/installing-solidity.html#binary-packages">Solidity binary packages</a> on your operating system.</p>
+				<a href="#test" id="test" style="color: inherit; text-decoration: none;">
+					<h2>Test</h2>
+				</a>
+				<p><a href="https://jestjs.io/">Jest</a> is used to run the unit tests with the configuration in <a href="./jest.config.js">jest.config.js</a></p>
+				<pre><code class="language-bash">jest --detectOpenHandles --forceExit --runInBand</code></pre>
+				<a href="#publish" id="publish" style="color: inherit; text-decoration: none;">
+					<h2>Publish</h2>
+				</a>
+				<p>Before publishing a new package to <a href="https://www.npmjs.com/">npm</a>, bump the package version in <a href="./package.json">package.json</a> and <a href="./src/ts/_version.ts">src/ts/_version.ts</a>.</p>
+				<p>The following will build, test and publish</p>
+				<pre><code class="language-bash">npm run build
+npm run <span class="hljs-built_in">test</span>
+npm publish</code></pre>
+				<p>One way to test a new package before publishing it is to run <code>npm pack</code> and then update the examples to point to the created package file. eg <code>hyperledger-besu-ethers-0.0.4.tgz</code>. In <a href="./examples/package.json">examples/package.json</a>, change the <code>hyperledger-besu-ethers</code> dependency to point to the created package file. eg <code>&quot;hyperledger-besu-ethers&quot;: &quot;../hyperledger-besu-ethers-0.0.4.tgz&quot;</code>.
+				You can then run an example.</p>
+				<pre><code class="language-bash">npm pack
+<span class="hljs-built_in">cd</span> examples
+node privateTransactions.js</code></pre>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-class">
+						<a href="classes/besuprovider.html" class="tsd-kind-icon">Besu<wbr>Provider</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/contract.html" class="tsd-kind-icon">Contract</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/errorrunningevent.html" class="tsd-kind-icon">Error<wbr>Running<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/fragmentrunningevent.html" class="tsd-kind-icon">Fragment<wbr>Running<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/privatecontract.html" class="tsd-kind-icon">Private<wbr>Contract</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/privatecontractfactory.html" class="tsd-kind-icon">Private<wbr>Contract<wbr>Factory</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/privateformatter.html" class="tsd-kind-icon">Private<wbr>Formatter</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/privatejsonrpcprovider.html" class="tsd-kind-icon">Private<wbr>Json<wbr>Rpc<wbr>Provider</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/privatewallet.html" class="tsd-kind-icon">Private<wbr>Wallet</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/runningevent.html" class="tsd-kind-icon">Running<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/wildcardrunningevent.html" class="tsd-kind-icon">Wildcard<wbr>Running<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/besustatistics.html" class="tsd-kind-icon">Besu<wbr>Statistics</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/besutransaction.html" class="tsd-kind-icon">Besu<wbr>Transaction</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-has-type-parameter">
+						<a href="interfaces/bucket.html" class="tsd-kind-icon">Bucket</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/calloverrides.html" class="tsd-kind-icon">Call<wbr>Overrides</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/contractreceipt.html" class="tsd-kind-icon">Contract<wbr>Receipt</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/contracttransaction.html" class="tsd-kind-icon">Contract<wbr>Transaction</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/event.html" class="tsd-kind-icon">Event</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/findprivacygroup.html" class="tsd-kind-icon">Find<wbr>Privacy<wbr>Group</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/nodeinfo.html" class="tsd-kind-icon">Node<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/overrides.html" class="tsd-kind-icon">Overrides</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/payableoverrides.html" class="tsd-kind-icon">Payable<wbr>Overrides</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/peerinfo.html" class="tsd-kind-icon">Peer<wbr>Info</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/privacygroupoptions.html" class="tsd-kind-icon">Privacy<wbr>Group<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/privatecontractreceipt.html" class="tsd-kind-icon">Private<wbr>Contract<wbr>Receipt</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/privateevent.html" class="tsd-kind-icon">Private<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/privateprovider.html" class="tsd-kind-icon">Private<wbr>Provider</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/privatesigner.html" class="tsd-kind-icon">Private<wbr>Signer</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/privatetransaction.html" class="tsd-kind-icon">Private<wbr>Transaction</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/privatetransactionreceipt.html" class="tsd-kind-icon">Private<wbr>Transaction<wbr>Receipt</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/privatetransactionrequest.html" class="tsd-kind-icon">Private<wbr>Transaction<wbr>Request</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/privatetransactionresponse.html" class="tsd-kind-icon">Private<wbr>Transaction<wbr>Response</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#blockparameter" class="tsd-kind-icon">Block<wbr>Parameter</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#contractfunction" class="tsd-kind-icon">Contract<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#contractinterface" class="tsd-kind-icon">Contract<wbr>Interface</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#decoded" class="tsd-kind-icon">Decoded</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#eventfilter" class="tsd-kind-icon">Event<wbr>Filter</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#formatfunc" class="tsd-kind-icon">Format<wbr>Func</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#formatfuncs" class="tsd-kind-icon">Format<wbr>Funcs</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#interfacefunc" class="tsd-kind-icon">Interface<wbr>Func</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#permissioningresult" class="tsd-kind-icon">Permissioning<wbr>Result</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#privateformats" class="tsd-kind-icon">Private<wbr>Formats</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#privateunsignedtransaction" class="tsd-kind-icon">Private<wbr>Unsigned<wbr>Transaction</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#restriction" class="tsd-kind-icon">Restriction</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#runfunction" class="tsd-kind-icon">Run<wbr>Function</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#runoptions" class="tsd-kind-icon">Run<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#hexcharacters" class="tsd-kind-icon">Hex<wbr>Characters</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#allowedprivatetransactionkeys" class="tsd-kind-icon">allowed<wbr>Private<wbr>Transaction<wbr>Keys</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#base64" class="tsd-kind-icon">base64</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#bytecode" class="tsd-kind-icon">bytecode</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#bytes" class="tsd-kind-icon">bytes</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#bytes32" class="tsd-kind-icon">bytes32</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#bytes64" class="tsd-kind-icon">bytes64</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#defaultformatter" class="tsd-kind-icon">default<wbr>Formatter</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#ethereumaddress" class="tsd-kind-icon">ethereum<wbr>Address</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#invalidnode" class="tsd-kind-icon">invalid<wbr>Node</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#logger" class="tsd-kind-icon">logger</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#node1" class="tsd-kind-icon">node1</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#node1address" class="tsd-kind-icon">node1<wbr>Address</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#node2" class="tsd-kind-icon">node2</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#node3" class="tsd-kind-icon">node3</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#node3address" class="tsd-kind-icon">node3<wbr>Address</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#precompiledcontract" class="tsd-kind-icon">pre<wbr>Compiled<wbr>Contract</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#precompiledcontractaddress" class="tsd-kind-icon">pre<wbr>Compiled<wbr>Contract<wbr>Address</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#provider" class="tsd-kind-icon">provider</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#providernode1" class="tsd-kind-icon">provider<wbr>Node1</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#providernode2" class="tsd-kind-icon">provider<wbr>Node2</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#providernode3" class="tsd-kind-icon">provider<wbr>Node3</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#testcontractabi" class="tsd-kind-icon">test<wbr>Contract<wbr>Abi</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#transactionfields" class="tsd-kind-icon">transaction<wbr>Fields</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#transactionhash" class="tsd-kind-icon">transaction<wbr>Hash</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#url" class="tsd-kind-icon">url</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#urlnode1" class="tsd-kind-icon">url<wbr>Node1</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#urlnode2" class="tsd-kind-icon">url<wbr>Node2</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#urlnode3" class="tsd-kind-icon">url<wbr>Node3</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#version" class="tsd-kind-icon">version</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#_decode" class="tsd-kind-icon">_decode</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#_decodechildren" class="tsd-kind-icon">_decode<wbr>Children</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#_encode" class="tsd-kind-icon">_encode</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#addslice" class="tsd-kind-icon">add<wbr>Slice</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#arrayify" class="tsd-kind-icon">arrayify</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#arrayifyinteger" class="tsd-kind-icon">arrayify<wbr>Integer</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#computeaddress" class="tsd-kind-icon">compute<wbr>Address</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#decode" class="tsd-kind-icon">decode</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#encode" class="tsd-kind-icon">encode</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#generateprivacygroup" class="tsd-kind-icon">generate<wbr>Privacy<wbr>Group</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#geteventtag" class="tsd-kind-icon">get<wbr>Event<wbr>Tag</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getlowercase" class="tsd-kind-icon">get<wbr>Lower<wbr>Case</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getprivateaddress" class="tsd-kind-icon">get<wbr>Private<wbr>Address</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getresult" class="tsd-kind-icon">get<wbr>Result</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#handleaddress" class="tsd-kind-icon">handle<wbr>Address</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#handlenumber" class="tsd-kind-icon">handle<wbr>Number</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#handleprivateaddress" class="tsd-kind-icon">handle<wbr>Private<wbr>Address</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#handleprivatefor" class="tsd-kind-icon">handle<wbr>Private<wbr>For</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#handlestring" class="tsd-kind-icon">handle<wbr>String</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#hexlify" class="tsd-kind-icon">hexlify</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#ishexable" class="tsd-kind-icon">is<wbr>Hexable</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#parse" class="tsd-kind-icon">parse</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#recoveraddress" class="tsd-kind-icon">recover<wbr>Address</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#resolveaddresses" class="tsd-kind-icon">resolve<wbr>Addresses</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#runmethod" class="tsd-kind-icon">run<wbr>Method</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#runprivatemethod" class="tsd-kind-icon">run<wbr>Private<wbr>Method</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#serialize" class="tsd-kind-icon">serialize</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#unarrayifyinteger" class="tsd-kind-icon">unarrayify<wbr>Integer</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#allowedtransactionkeys" class="tsd-kind-icon">allowed<wbr>Transaction<wbr>Keys</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#providers" class="tsd-kind-icon">providers</a>
+					</li>
+					<li class=" tsd-kind-object-literal">
+						<a href="globals.html#utils" class="tsd-kind-icon">utils</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
