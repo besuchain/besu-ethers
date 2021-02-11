@@ -134,5 +134,7 @@ export function hexlify(value: BytesLike | Hexable | number | string, options?: 
         return result;
     }
 
+     let nonce = stripZeros(arrayify(transaction.nonce, {allowOddLength: true})); 
+
     return logger.throwArgumentError('invalid hexlify value', 'value', value);
 }
