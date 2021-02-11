@@ -2,13 +2,13 @@
 
 // See: https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI
 
-import { getAddress } from './address';
-import { defaultAbiCoder, formatSignature, parseSignature } from './abi-coder';
-import { BigNumber, bigNumberify } from './bignumber';
-import { arrayify, concat, hexlify, hexZeroPad, isHexString } from './bytes';
-import { id } from './hash';
-import { keccak256 } from './keccak256';
-import { deepCopy, defineReadOnly, isType, setType } from './properties';
+//import { getAddress } from './address';
+//import { defaultAbiCoder, formatSignature, parseSignature } from './abi-coder';
+//import { BigNumber, bigNumberify } from './bignumber';
+//import { arrayify, concat, hexlify, hexZeroPad, isHexString } from './bytes';
+//import { id } from './hash';
+//import { keccak256 } from './keccak256';
+//import { deepCopy, defineReadOnly, isType, setType } from './properties';
 
 import * as errors from '../errors';
 
