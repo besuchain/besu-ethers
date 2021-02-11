@@ -53,7 +53,7 @@ function getResult(payload: {
 }): any {
   if (payload.error) {
     // @TODO: not any
-    let error: any = new Error(payload.error.message);
+    const error: any = new Error(payload.error.message);
     error.code = payload.error.code;
     error.data = payload.error.data;
     throw error;
@@ -89,7 +89,7 @@ export class PrivateJsonRpcProvider extends JsonRpcProvider implements PrivatePr
 
   send(method: string, params: any): Promise<any> {
     const id = this._nextId++;
-    let request = {
+    const request = {
       method: method,
       params: params,
       id,
@@ -152,7 +152,7 @@ export class PrivateJsonRpcProvider extends JsonRpcProvider implements PrivatePr
       );
     }
 
-    let result = <PrivateTransactionResponse>tx;
+    const result = <PrivateTransactionResponse>tx;
 
     tx.publicHash = publicTransactionHash;
 
@@ -214,7 +214,7 @@ export class PrivateJsonRpcProvider extends JsonRpcProvider implements PrivatePr
     return this.ready.then(() => {
       return resolveProperties({ transactionHash: publicTransactionHash }).then(
         ({ transactionHash }) => {
-          let params = { transactionHash: this.formatter.hash(transactionHash, true) };
+          const params = { transactionHash: this.formatter.hash(transactionHash, true) };
           return poll(
             () => {
               // TODO refactor this to use asymnc/await to make it easier to read
@@ -288,7 +288,7 @@ export class PrivateJsonRpcProvider extends JsonRpcProvider implements PrivatePr
   getPrivateTransaction(transactionHash: string): Promise<PrivateTransactionResponse> {
     return this.ready.then(() => {
       return resolveProperties({ transactionHash: transactionHash }).then(({ transactionHash }) => {
-        let params = { transactionHash: this.formatter.hash(transactionHash, true) };
+        const params = { transactionHash: this.formatter.hash(transactionHash, true) };
         return poll(
           () => {
             return this.perform('getPrivateTransaction', params).then((result) => {

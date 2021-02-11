@@ -153,7 +153,7 @@ export class PrivateFormatter extends Formatter {
     // we don't have enough information to set the hash of the public market transaction
     transaction.publicHash = null;
 
-    let result = Formatter.check(this.formats.privateTransaction, transaction);
+    const result = Formatter.check(this.formats.privateTransaction, transaction);
 
     return result;
   }

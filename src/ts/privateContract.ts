@@ -88,7 +88,7 @@ export class PrivateContract extends Contract {
   }
 
   connect(signerOrProvider: PrivateSigner | PrivateProvider): PrivateContract {
-    let contract = new (<{ new (...args: any[]): PrivateContract }>this.constructor)(
+    const contract = new (<{ new (...args: any[]): PrivateContract }>this.constructor)(
       this.address,
       this.privacyGroupOptions,
       this.interface,
@@ -120,7 +120,7 @@ function runPrivateMethod(
   functionName: string,
   options: RunOptions
 ): RunFunction {
-  let method = contract.interface.functions[functionName];
+  const method = contract.interface.functions[functionName];
   return function (...params): Promise<any> {
     let tx: any = {};
 
@@ -134,7 +134,7 @@ function runPrivateMethod(
       delete tx.blockTag;
 
       // Check for unexpected keys (e.g. using "gas" instead of "gasLimit")
-      for (let key in tx) {
+      for (const key in tx) {
         if (!allowedTransactionKeys[key]) {
           logger.throwError('unknown transaction override - ' + key, 'overrides', tx);
         }
@@ -289,14 +289,14 @@ function runPrivateMethod(
         }
 
         return contract.signer.sendPrivateTransaction(tx).then((tx: PrivateTransactionResponse) => {
-          let wait = tx.wait.bind(tx);
+          const wait = tx.wait.bind(tx);
 
           tx.wait = (confirmations?: number) => {
             return wait(confirmations).then((receipt: PrivateContractReceipt) => {
               receipt.events = receipt.logs.map((log) => {
-                let event: PrivateEvent = <PrivateEvent>deepCopy(log);
+                const event: PrivateEvent = <PrivateEvent>deepCopy(log);
 
-                let parsed = contract.interface.parseLog(log);
+                const parsed = contract.interface.parseLog(log);
                 if (parsed) {
                   event.values = parsed.values;
                   event.decode = (data: BytesLike, topics?: Array<any>) => {
@@ -433,7 +433,7 @@ export class PrivateContractFactory extends ContractFactory {
       logger.throwArgumentError('missing from address', 'transaction', transaction);
     }
 
-    let nonce = stripZeros(arrayify(transaction.nonce));
+    const nonce = stripZeros(arrayify(transaction.nonce));
 
     // convert from object with privateFrom and privateFor properties to base64 from
     const privacyGroupId = generatePrivacyGroup(transaction);

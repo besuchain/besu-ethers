@@ -16,7 +16,7 @@ function addSlice(array: Uint8Array): Uint8Array {
   }
 
   array.slice = function () {
-    let args = Array.prototype.slice.call(arguments);
+    const args = Array.prototype.slice.call(arguments);
     return addSlice(new Uint8Array(Array.prototype.slice.apply(array, args)));
   };
 
@@ -34,7 +34,7 @@ export function arrayify(
   if (typeof value === 'number') {
     logger.checkSafeUint53(value, 'invalid arrayify value');
 
-    let result = [];
+    const result = [];
     while (value) {
       result.unshift(value & 0xff);
       value /= 256;
@@ -55,12 +55,12 @@ export function arrayify(
   }
 
   if (isHexString(value)) {
-    let hex = (<string>value).substring(2);
+    const hex = (<string>value).substring(2);
     if (!options.allowOddLength && hex.length % 2) {
       logger.throwArgumentError('hex data is odd-length', 'value', value);
     }
 
-    let result = [];
+    const result = [];
     for (let i = 0; i < hex.length; i += 2) {
       result.push(parseInt(hex.substring(i, i + 2), 16));
     }
@@ -81,7 +81,7 @@ export function arrayify(
   return logger.throwArgumentError('invalid arrayify value', 'value', value);
 }
 
-const HexCharacters: string = '0123456789abcdef';
+const HexCharacters = '0123456789abcdef';
 
 export function hexlify(
   value: BytesLike | Hexable | number | string,
@@ -134,13 +134,13 @@ export function hexlify(
   if (isBytes(value)) {
     let result = '0x';
     for (let i = 0; i < value.length; i++) {
-      let v = value[i];
+      const v = value[i];
       result += HexCharacters[(v & 0xf0) >> 4] + HexCharacters[v & 0x0f];
     }
     return result;
   }
 
-  let nonce = stripZeros(arrayify(transaction.nonce, { allowOddLength: true }));
+  const nonce = stripZeros(arrayify(transaction.nonce, { allowOddLength: true }));
 
   return logger.throwArgumentError('invalid hexlify value', 'value', value);
 }

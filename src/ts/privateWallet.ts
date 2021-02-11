@@ -62,7 +62,7 @@ export class PrivateWallet extends Wallet implements PrivateSigner {
         delete tx.from;
       }
 
-      let signature = this._signingKey().signDigest(keccak256(serialize(tx)));
+      const signature = this._signingKey().signDigest(keccak256(serialize(tx)));
       return serialize(tx, signature);
     });
   }
@@ -126,13 +126,13 @@ export class PrivateWallet extends Wallet implements PrivateSigner {
   }
 
   checkTransaction(transaction: PrivateTransactionRequest): PrivateTransactionRequest {
-    for (let key in transaction) {
+    for (const key in transaction) {
       if (allowedPrivateTransactionKeys.indexOf(key) === -1) {
         logger.throwArgumentError('invalid transaction key: ' + key, 'transaction', transaction);
       }
     }
 
-    let tx = shallowCopy(transaction);
+    const tx = shallowCopy(transaction);
     if (tx.from == null) {
       tx.from = this.getAddress();
     }

@@ -84,7 +84,7 @@ class _Indexed implements Indexed {
 class Description {
   constructor(info: any) {
     setType(this, 'Description');
-    for (var key in info) {
+    for (const key in info) {
       defineReadOnly(this, key, deepCopy(info[key], true));
     }
     Object.freeze(this);
@@ -187,13 +187,13 @@ class _EventDescription extends Description implements EventDescription {
       });
     }
 
-    let topics: Array<string> = [];
+    const topics: Array<string> = [];
     if (!this.anonymous) {
       topics.push(this.topic);
     }
 
     params.forEach((arg, index) => {
-      let param = this.inputs[index];
+      const param = this.inputs[index];
 
       if (!param.indexed) {
         if (arg != null) {
@@ -240,9 +240,9 @@ class _EventDescription extends Description implements EventDescription {
       topics = topics.slice(1);
     }
 
-    let inputIndexed: Array<ParamType> = [];
-    let inputNonIndexed: Array<ParamType> = [];
-    let inputDynamic: Array<boolean> = [];
+    const inputIndexed: Array<ParamType> = [];
+    const inputNonIndexed: Array<ParamType> = [];
+    const inputDynamic: Array<boolean> = [];
     this.inputs.forEach(function (param, index) {
       if (param.indexed) {
         if (
@@ -267,10 +267,10 @@ class _EventDescription extends Description implements EventDescription {
       var resultIndexed = defaultAbiCoder.decode(inputIndexed, concat(topics));
     }
 
-    var resultNonIndexed = defaultAbiCoder.decode(inputNonIndexed, arrayify(data));
+    const resultNonIndexed = defaultAbiCoder.decode(inputNonIndexed, arrayify(data));
 
-    var result: any = {};
-    var nonIndexedIndex = 0,
+    const result: any = {};
+    let nonIndexedIndex = 0,
       indexedIndex = 0;
     this.inputs.forEach(function (input, index) {
       if (input.indexed) {
@@ -315,7 +315,7 @@ class _LogDescription extends Description implements LogDescription {
 function addMethod(method: any): void {
   switch (method.type) {
     case 'constructor': {
-      let description = new _DeployDescription({
+      const description = new _DeployDescription({
         inputs: method.inputs,
         payable: method.payable == null || !!method.payable,
       });
@@ -328,8 +328,8 @@ function addMethod(method: any): void {
     }
 
     case 'function': {
-      let signature = formatSignature(method).replace(/tuple/g, '');
-      let sighash = id(signature).substring(0, 10);
+      const signature = formatSignature(method).replace(/tuple/g, '');
+      const sighash = id(signature).substring(0, 10);
 
       let isConst = false;
       if (method.constant != null) {
@@ -338,7 +338,7 @@ function addMethod(method: any): void {
         isConst = method.stateMutability == 'view' || method.stateMutability == 'pure';
       }
 
-      let description = new _FunctionDescription({
+      const description = new _FunctionDescription({
         inputs: method.inputs,
         outputs: method.outputs,
 
@@ -370,9 +370,9 @@ function addMethod(method: any): void {
     }
 
     case 'event': {
-      let signature = formatSignature(method).replace(/tuple/g, '');
+      const signature = formatSignature(method).replace(/tuple/g, '');
 
-      let description = new _EventDescription({
+      const description = new _EventDescription({
         name: method.name,
         signature: signature,
 
@@ -437,7 +437,7 @@ export class Interface {
     defineReadOnly(this, 'events', {});
 
     // Convert any supported ABI format into a standard ABI format
-    let _abi: Array<EventFragment | FunctionFragment> = [];
+    const _abi: Array<EventFragment | FunctionFragment> = [];
     abi.forEach((fragment) => {
       if (typeof fragment === 'string') {
         fragment = parseSignature(fragment);
@@ -459,14 +459,14 @@ export class Interface {
   }
 
   parseTransaction(tx: { data: string; value?: BigNumberish }): _TransactionDescription {
-    var sighash = tx.data.substring(0, 10).toLowerCase();
-    for (var name in this.functions) {
+    const sighash = tx.data.substring(0, 10).toLowerCase();
+    for (const name in this.functions) {
       if (name.indexOf('(') === -1) {
         continue;
       }
-      var func = this.functions[name];
+      const func = this.functions[name];
       if (func.sighash === sighash) {
-        var result = defaultAbiCoder.decode(func.inputs, '0x' + tx.data.substring(10));
+        const result = defaultAbiCoder.decode(func.inputs, '0x' + tx.data.substring(10));
         return new _TransactionDescription({
           args: result,
           decode: func.decode,
@@ -482,11 +482,11 @@ export class Interface {
   }
 
   parseLog(log: { topics: Array<string>; data: string }): _LogDescription {
-    for (var name in this.events) {
+    for (const name in this.events) {
       if (name.indexOf('(') === -1) {
         continue;
       }
-      var event = this.events[name];
+      const event = this.events[name];
       if (event.anonymous) {
         continue;
       }
