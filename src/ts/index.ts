@@ -7,9 +7,9 @@ export * from './privateContract';
 import * as privateProviders from './privateProvider';
 import * as besuProviders from './besuProvider';
 export const providers = {
-    ...ethers.providers,
-    ...privateProviders,
-    ...besuProviders,
+  ...ethers.providers,
+  ...privateProviders,
+  ...besuProviders,
 };
 
 import * as privateTransactions from './privateTransaction';
@@ -20,13 +20,13 @@ import * as RegEx from './utils/RegEx';
 export * from './privacyGroup';
 
 export const utils = {
-    ...ethers.utils,
-    ...bytes,
-    ...RLP,
-    RegEx: {
-        ...RegEx,
-    },
-    ...privateTransactions,
+  ...ethers.utils,
+  ...bytes,
+  ...RLP,
+  RegEx: {
+    ...RegEx,
+  },
+  ...privateTransactions,
 };
 
 export * from './privateWallet';

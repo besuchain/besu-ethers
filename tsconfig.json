@@ -1,33 +1,33 @@
 {
-    "compilerOptions": {
-        "composite": true,
+  "compilerOptions": {
+    "composite": true,
 
-        "esModuleInterop": true,
-        "lib": ["es2015", "es5", "es6", "dom"],
-        "module": "commonjs",
-        "target": "es5",
-        "moduleResolution": "node",
+    "esModuleInterop": true,
+    "lib": ["es2015", "es5", "es6", "dom"],
+    "module": "commonjs",
+    "target": "es5",
+    "moduleResolution": "node",
 
-        "declaration": true,
+    "declaration": true,
 
-        "preserveSymlinks": true,
+    "preserveSymlinks": true,
 
-        "preserveWatchOutput": true,
-        "pretty": false,
+    "preserveWatchOutput": true,
+    "pretty": false,
 
-        "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": true,
 
-        "noEmitOnError": true,
+    "noEmitOnError": true,
 
-        "noFallthroughCasesInSwitch": true,
-        "noImplicitAny": true,
-        "noImplicitReturns": true,
-        "noUnusedLocals": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
 
-        "resolveJsonModule": true,
+    "resolveJsonModule": true,
 
-        "outDir": "dist",
-        "rootDir": "./src/ts"
-    },
-    "exclude": ["**/dist/*", "**/__tests__"]
+    "outDir": "dist",
+    "rootDir": "./src/ts"
+  },
+  "exclude": ["**/dist/*", "**/__tests__"]
 }

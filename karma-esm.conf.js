@@ -1,21 +1,17 @@
- "use strict";
+'use strict';
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
-    frameworks: [ 'mocha' ],
+    frameworks: ['mocha'],
     files: [
-        { pattern: "./packages/ethers/dist/ethers-all.esm.min.js", type: "module" },
-        { pattern: "./packages/tests/dist/tests.esm.js", type: "module" }
+      { pattern: './packages/ethers/dist/ethers-all.esm.min.js', type: 'module' },
+      { pattern: './packages/tests/dist/tests.esm.js', type: 'module' },
     ],
     reporters: ['karma'],
-    plugins: [
-      'karma-mocha',
-      'karma-chrome-launcher',
-      require('./packages/tests/karma-reporter')
-    ],
+    plugins: ['karma-mocha', 'karma-chrome-launcher', require('./packages/tests/karma-reporter')],
     port: 9876,
     logLevel: config.LOG_INFO,
-    browsers: [ 'ChromeHeadless', "HeadlessLittleLiar" ],
+    browsers: ['ChromeHeadless', 'HeadlessLittleLiar'],
     autoWatch: false,
     singleRun: true,
     browserNoActivityTimeout: 60000,
@@ -34,8 +30,10 @@ module.exports = function(config) {
           // Cloudflare will block (on the testnet endpoints) any traffic
           // from a headless chome (based on the user agent), so we lie
           // This was take from Safari, because that is what I had on-hand
-          '--user-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Safari/605.1.15']
-      }
+          '--user-agent',
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Safari/605.1.15',
+        ],
+      },
     },
     /*
     client: {
@@ -44,5 +42,5 @@ module.exports = function(config) {
       }
     }
     */
-  })
-}
+  });
+};
